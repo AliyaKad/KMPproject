@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="shared-desktop">
-    <output-path>$PROJECT_DIR$/KMPproject/shared/build/libs</output-path>
-    <root id="archive" name="shared-desktop.jar">
-      <element id="module-output" name="KMPproject.shared.desktopMain" />
-    </root>
-  </artifact>
-</component>
