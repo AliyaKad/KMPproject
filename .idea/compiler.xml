@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="KMPproject.desktopApp.commonMain" target="21" />
+      <module name="KMPproject.desktopApp.commonTest" target="21" />
+      <module name="KMPproject.desktopApp.desktopDev" target="21" />
+      <module name="KMPproject.desktopApp.desktopMain" target="21" />
+      <module name="KMPproject.desktopApp.desktopTest" target="21" />
+      <module name="KMPproject.desktopApp.jvmDev" target="21" />
+      <module name="KMPproject.desktopApp.jvmMain" target="21" />
+      <module name="KMPproject.desktopApp.jvmTest" target="21" />
+      <module name="KMPproject.shared.desktopDev" target="21" />
+      <module name="KMPproject.shared.desktopMain" target="21" />
+      <module name="KMPproject.shared.desktopTest" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
