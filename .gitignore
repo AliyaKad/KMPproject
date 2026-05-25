@@ -6,7 +6,6 @@ xcuserdata
 !src/**/build/
 local.properties
 .idea
-.idea/
 .DS_Store
 captures
 .externalNativeBuild
@@ -18,3 +17,8 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+.idea/
+*.iml
+*.iws
+out/
+build/
