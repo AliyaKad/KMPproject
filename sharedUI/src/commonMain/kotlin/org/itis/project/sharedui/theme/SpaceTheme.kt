@@ -1,4 +1,4 @@
-package org.itis.project.ui.theme
+package org.itis.project.sharedui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*

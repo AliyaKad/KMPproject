@@ -1,14 +1,13 @@
-package org.itis.project
+package org.itis.project.sharedui
 
-import java.sql.DriverManager.println
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import org.itis.project.ui.components.*
-import org.itis.project.ui.theme.*
+import androidx.compose.ui.graphics.Color
+import org.itis.project.sharedui.components.*
+import org.itis.project.sharedui.theme.*
 
 @Composable
 fun App() {
@@ -18,7 +17,7 @@ fun App() {
         GradientBackground {
             Surface(
                 modifier = Modifier.fillMaxSize(),
-                color = androidx.compose.ui.graphics.Color.Transparent
+                color = Color.Transparent
             ) {
                 Column(
                     modifier = Modifier

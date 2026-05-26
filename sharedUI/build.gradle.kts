@@ -5,10 +5,10 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -21,26 +21,20 @@ kotlin {
         }
     }
 
+
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
+                implementation(project(":sharedLogic"))
+
                 implementation(compose.runtime)
+                implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.ui)
                 implementation(compose.components.resources)
 
                 implementation(libs.androidx.lifecycle.viewmodelCompose)
                 implementation(libs.androidx.lifecycle.runtimeCompose)
-
-                implementation(libs.kotlinx.coroutines.core)
-
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.client.serialization)
-                implementation(libs.ktor.client.logging)
-
-                implementation(libs.kotlinx.serialization.json)
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
@@ -48,28 +42,18 @@ kotlin {
 
                 implementation(libs.coil.compose)
                 implementation(libs.coil.network.ktor)
+
+                implementation(libs.kotlinx.coroutines.core)
+
+                implementation(libs.kotlin.stdlib)
             }
         }
 
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.okhttp)
-                implementation(libs.kotlinx.coroutines.android)
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.okhttp)
-                implementation(libs.kotlinx.coroutines.swing)
-            }
-        }
     }
 }
 
-
 android {
-    namespace = "org.itis.project.shared"
+    namespace = "org.itis.project.sharedui"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
@@ -80,10 +64,4 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-}
-
-compose.resources {
-    publicResClass = true
-    packageOfResClass = "org.itis.project.shared.generated"
-    generateResClass = auto
 }

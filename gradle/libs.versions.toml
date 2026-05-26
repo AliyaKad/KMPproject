@@ -19,7 +19,7 @@ composeHotReload = "1.0.0"
 material3 = "1.10.0-alpha05"
 
 # multiplatform
-kotlin = "2.3.20" # https://github.com/jetbrains/kotlin/releases
+kotlin = "2.0.21" # https://github.com/jetbrains/kotlin/releases
 coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 serialization = "1.10.0" # https://github.com/Kotlin/kotlinx.serialization
 immutable = "0.4.0" # https://github.com/Kotlin/kotlinx.collections.immutable
@@ -39,6 +39,9 @@ crashlytics = "3.0.6"
 # testing
 mockk = "1.14.9" # https://github.com/mockk/mockk
 junit = "4.13.2"
+kotlinStdlib = "2.3.20"
+runner = "1.7.0"
+core = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -55,6 +58,7 @@ androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmode
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+compose-bom = { module = "org.jetbrains.compose:compose-bom", version = "1.7.0" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "material3" }
@@ -122,6 +126,9 @@ timber = "com.jakewharton.timber:timber:5.0.1"
 # Mockk
 mockk-jvm = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockk" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinStdlib" }
+androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
 
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android" }
@@ -137,6 +144,8 @@ buildKonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig"
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }
 googleService = { id = "com.google.gms.google-services", version.ref = "googleService" }
 crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
+androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+androidLint = { id = "com.android.lint", version.ref = "agp" }
 
 [bundles]
 ktorClientCommon = [

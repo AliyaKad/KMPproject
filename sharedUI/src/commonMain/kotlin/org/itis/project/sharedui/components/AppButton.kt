@@ -1,4 +1,4 @@
-package org.itis.project.ui.components
+package org.itis.project.sharedui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.itis.project.ui.theme.Dimens
-import org.itis.project.ui.theme.backgroundDark
-import org.itis.project.ui.theme.glassEffect
+import org.itis.project.sharedui.theme.Dimens
+import org.itis.project.sharedui.theme.backgroundDark
+import org.itis.project.sharedui.theme.glassEffect
 
 enum class ButtonVariant {
     Primary, Secondary, Glass, Ghost
