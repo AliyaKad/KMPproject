@@ -7,12 +7,12 @@ plugins {
 }
 
 dependencies {
-
+    implementation(projects.sharedLogic)
     implementation(projects.sharedUI)
-
     implementation(compose.desktop.currentOs)
-
     implementation(libs.compose.uiToolingPreview)
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
 }
 
 compose.desktop {

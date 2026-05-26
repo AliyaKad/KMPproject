@@ -1,8 +1,11 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.buildKonfig)
 }
 
 kotlin {
@@ -36,8 +39,8 @@ kotlin {
 
                 implementation(libs.sqldelight.coroutines.extensions)
 
+                implementation(libs.androidx.lifecycle.viewmodel.multiplatform)
                 implementation(libs.kotlinx.datetime)
-
             }
         }
 
@@ -72,5 +75,20 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+val nasaKey: String = run {
+    val props = Properties()
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use(props::load)
+    (props.getProperty("NASA_API_KEY") ?: System.getenv("NASA_API_KEY") ?: "DEMO_KEY")
+}
+
+buildkonfig {
+    packageName = "org.itis.project.sharedlogic.config"
+    objectName = "BuildConfig"
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, "NASA_API_KEY", nasaKey)
     }
 }

@@ -130,6 +130,7 @@ kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", versio
 androidx-runner = { group = "androidx.test", name = "runner", version.ref = "runner" }
 core = { group = "androidx.test", name = "core", version.ref = "core" }
 
+androidx-lifecycle-viewmodel-multiplatform = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm" }
