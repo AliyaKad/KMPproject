@@ -1,4 +1,4 @@
-package org.itis.project.sharedlogic.domain
+package org.itis.project.sharedlogic.domain.model
 
 import kotlinx.serialization.Serializable
 

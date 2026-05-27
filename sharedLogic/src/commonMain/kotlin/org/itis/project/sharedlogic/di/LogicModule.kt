@@ -1,7 +1,7 @@
 package org.itis.project.sharedlogic.di
 
-import org.itis.project.sharedlogic.data.IssRepository
-import org.itis.project.sharedlogic.data.NasaRepository
+import org.itis.project.sharedlogic.data.repository.home.IssRepository
+import org.itis.project.sharedlogic.data.repository.home.NasaRepository
 import org.itis.project.sharedlogic.network.api.IssApi
 import org.itis.project.sharedlogic.network.api.NasaApi
 import org.itis.project.sharedlogic.network.createHttpClient

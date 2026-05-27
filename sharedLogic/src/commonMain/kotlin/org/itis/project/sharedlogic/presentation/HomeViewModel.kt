@@ -5,17 +5,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.data.ErrorContext
 import org.itis.project.sharedlogic.data.Errors
-import org.itis.project.sharedlogic.data.IssRepository
-import org.itis.project.sharedlogic.data.NasaRepository
+import org.itis.project.sharedlogic.data.repository.home.IssRepository
+import org.itis.project.sharedlogic.data.repository.home.NasaRepository
 import org.itis.project.sharedlogic.data.PlanetOfDay
-import org.itis.project.sharedlogic.domain.Apod
-import org.itis.project.sharedlogic.domain.IssPosition
+import org.itis.project.sharedlogic.domain.model.Apod
+import org.itis.project.sharedlogic.domain.model.IssPosition
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 data class HomeState(
     val greeting: String = "",

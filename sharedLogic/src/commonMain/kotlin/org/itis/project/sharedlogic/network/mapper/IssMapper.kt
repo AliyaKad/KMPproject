@@ -1,6 +1,6 @@
 package org.itis.project.sharedlogic.network.mapper
 
-import org.itis.project.sharedlogic.domain.IssPosition
+import org.itis.project.sharedlogic.domain.model.IssPosition
 import org.itis.project.sharedlogic.network.pojo.response.IssNowResponse
 
 fun IssNowResponse.toDomain(): IssPosition = IssPosition(

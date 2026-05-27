@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.buildKonfig)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -60,6 +61,15 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.sqldelight.sqlite.driver)
             }
+        }
+    }
+}
+
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("org.itis.project")
         }
     }
 }
