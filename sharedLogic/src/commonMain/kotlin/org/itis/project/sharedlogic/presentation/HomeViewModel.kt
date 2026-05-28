@@ -61,7 +61,7 @@ class HomeViewModel(
 
     private fun loadApod() {
         viewModelScope.launch {
-            runCatching { nasaRepo.getApod() }
+            runCatching { nasaRepo.apod() }
                 .onSuccess { apod ->
                     _state.value = _state.value.copy(apod = apod, apodLoading = false, apodError = null)
                 }
@@ -73,7 +73,7 @@ class HomeViewModel(
 
     private fun loadIss() {
         viewModelScope.launch {
-            runCatching { issRepo.getIssPosition() }
+            runCatching { issRepo.now() }
                 .onSuccess { pos ->
                     _state.value = _state.value.copy(issPosition = pos, issLoading = false, issError = null)
                 }

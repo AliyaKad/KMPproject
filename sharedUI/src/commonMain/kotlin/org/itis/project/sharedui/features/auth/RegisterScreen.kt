@@ -1,4 +1,4 @@
-package org.itis.project.presentation
+package org.itis.project.sharedui.features.auth
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions

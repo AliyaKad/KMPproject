@@ -1,8 +1,10 @@
 package org.itis.project.sharedlogic.feature.auth.impl.data
 
+import org.itis.project.sharedlogic.Database
+import org.itis.project.domain.Session
 import org.itis.project.domain.User
 
-class UserDao(private val db: UserDatabase) {
+class UserDao(private val db: Database) {
 
     suspend fun getUserByEmail(email: String): User? {
         return db.userQueries.selectUserByEmail(email)

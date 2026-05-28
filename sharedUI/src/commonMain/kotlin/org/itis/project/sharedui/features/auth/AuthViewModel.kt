@@ -1,4 +1,4 @@
-package org.itis.project.presentation
+package org.itis.project.sharedui.features.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,23 +29,18 @@ class AuthViewModel(
         when (event) {
             is AuthEvent.OnLogin -> login(event.email, event.password)
             is AuthEvent.OnRegister -> register(event.email, event.username, event.password)
-            is AuthEvent.OnLogout -> logout()
-            is AuthEvent.CheckAuth -> checkAuth()
+            AuthEvent.OnLogout -> logout()
+            AuthEvent.CheckAuth -> checkAuth()
         }
     }
 
     private fun checkAuth() {
         viewModelScope.launch {
             _state.value = AuthState.Loading
-            try {
-                val user = checkAuthUseCase()
-                _state.value = if (user != null) {
-                    AuthState.Authorized(user)
-                } else {
-                    AuthState.Unauthorized
-                }
+            _state.value = try {
+                checkAuthUseCase()?.let { AuthState.Authorized(it) } ?: AuthState.Unauthorized
             } catch (e: Exception) {
-                _state.value = AuthState.Error(e.message ?: "Unknown error")
+                AuthState.Error(e.message ?: "Unknown error")
             }
         }
     }
@@ -53,7 +48,12 @@ class AuthViewModel(
     private fun login(email: String, password: String) {
         viewModelScope.launch {
             _state.value = AuthState.Loading
-            val result = loginUseCase(email, password)
+            val result = try {
+                loginUseCase(email, password)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+
             _state.value = result.fold(
                 onSuccess = { AuthState.Authorized(it) },
                 onFailure = { AuthState.Error(it.message ?: "Login failed") }
@@ -64,7 +64,12 @@ class AuthViewModel(
     private fun register(email: String, username: String, password: String) {
         viewModelScope.launch {
             _state.value = AuthState.Loading
-            val result = registerUseCase(email, username, password)
+            val result = try {
+                registerUseCase(email, username, password)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+
             _state.value = result.fold(
                 onSuccess = { AuthState.Authorized(it) },
                 onFailure = { AuthState.Error(it.message ?: "Registration failed") }
@@ -79,3 +84,4 @@ class AuthViewModel(
         }
     }
 }
+
