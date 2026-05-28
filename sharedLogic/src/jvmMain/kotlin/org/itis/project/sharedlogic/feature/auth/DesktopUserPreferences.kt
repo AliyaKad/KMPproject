@@ -11,7 +11,10 @@ class DesktopUserPreferences : UserPreferences {
     private val prefsFile = File(System.getProperty("user.home"), ".spacevue_prefs.json")
 
     @Serializable
-    private data class PrefsData(val currentUserId: Long? = null)
+    private data class PrefsData(
+        val currentUserId: Long? = null,
+        val isDarkTheme: Boolean? = null
+    )
 
     private fun readPrefs(): PrefsData {
         return if (prefsFile.exists()) {
@@ -46,6 +49,19 @@ class DesktopUserPreferences : UserPreferences {
         withContext(Dispatchers.IO) {
             val current = readPrefs()
             writePrefs(current.copy(currentUserId = null))
+        }
+    }
+
+    override suspend fun saveThemePreference(isDarkTheme: Boolean) {
+        withContext(Dispatchers.IO) {
+            val current = readPrefs()
+            writePrefs(current.copy(isDarkTheme = isDarkTheme))
+        }
+    }
+
+    override suspend fun getThemePreference(): Boolean? {
+        return withContext(Dispatchers.IO) {
+            readPrefs().isDarkTheme
         }
     }
 }

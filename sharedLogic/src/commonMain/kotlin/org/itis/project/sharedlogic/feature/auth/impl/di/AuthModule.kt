@@ -7,6 +7,9 @@ import org.itis.project.domain.RegisterUseCase
 import org.itis.project.sharedlogic.Database
 import org.itis.project.sharedlogic.data.repository.auth.AuthRepository
 import org.itis.project.sharedlogic.di.PlatformDependencies
+import org.itis.project.sharedlogic.domain.usecase.auth.GetThemeUseCase
+import org.itis.project.sharedlogic.domain.usecase.auth.GetCurrentUserUseCase
+import org.itis.project.sharedlogic.domain.usecase.auth.UpdateThemeUseCase
 import org.itis.project.sharedlogic.feature.auth.impl.data.UserDao
 import org.itis.project.sharedlogic.feature.auth.impl.data.UserPreferences
 import org.koin.dsl.module
@@ -22,4 +25,7 @@ fun createAppModule(dependencies: PlatformDependencies) = module {
     factory { RegisterUseCase(get()) }
     factory { CheckAuthUseCase(get()) }
     factory { LogoutUseCase(get()) }
+    factory { GetCurrentUserUseCase(get()) }
+    factory { UpdateThemeUseCase(get()) }
+    factory { GetThemeUseCase(get()) }
 }

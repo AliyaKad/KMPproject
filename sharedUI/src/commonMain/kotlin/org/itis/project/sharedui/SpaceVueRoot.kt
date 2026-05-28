@@ -1,6 +1,5 @@
 package org.itis.project.sharedui
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,12 +20,15 @@ import org.itis.project.sharedui.features.auth.RegisterScreen
 import org.itis.project.sharedui.features.auth.AuthEvent
 import org.itis.project.sharedui.features.auth.AuthState
 import org.itis.project.sharedui.features.auth.AuthViewModel
-import org.itis.project.sharedui.features.home.HomeScreen
-import org.itis.project.sharedui.theme.SpaceTheme
+import org.itis.project.sharedui.features.profile.ProfileScreen
+import org.itis.project.sharedui.features.profile.ProfileViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SpaceVueRoot() {
+fun SpaceVueRoot(
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit
+) {
     setSingletonImageLoaderFactory { context ->
         ImageLoader.Builder(context)
             .components { add(KtorNetworkFetcherFactory()) }
@@ -34,48 +36,55 @@ fun SpaceVueRoot() {
             .build()
     }
 
-    val isDark = isSystemInDarkTheme()
     val authViewModel: AuthViewModel = koinViewModel()
+    val profileViewModel: ProfileViewModel = koinViewModel()
+
     val authState by authViewModel.state.collectAsState()
+    val profileState by profileViewModel.state.collectAsState()
+
     val showRegister = remember { mutableStateOf(false) }
 
-    SpaceTheme(darkTheme = isDark) {
-        when (authState) {
-            is AuthState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                }
+    when (authState) {
+        is AuthState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
             }
+        }
 
-            is AuthState.Unauthorized,
-            is AuthState.Error -> {
-                if (showRegister.value) {
-                    RegisterScreen(
-                        onRegisterClick = { email, username, password ->
-                            authViewModel.handleEvent(
-                                AuthEvent.OnRegister(email, username, password)
-                            )
-                        },
-                        onBackToLogin = { showRegister.value = false }
-                    )
-                } else {
-                    LoginScreen(
-                        onLoginClick = { email, password ->
-                            authViewModel.handleEvent(
-                                AuthEvent.OnLogin(email, password)
-                            )
-                        },
-                        onRegisterClick = { showRegister.value = true }
-                    )
-                }
+        is AuthState.Unauthorized,
+        is AuthState.Error -> {
+            if (showRegister.value) {
+                RegisterScreen(
+                    onRegisterClick = { email, username, password ->
+                        authViewModel.handleEvent(
+                            AuthEvent.OnRegister(email, username, password)
+                        )
+                    },
+                    onBackToLogin = { showRegister.value = false }
+                )
+            } else {
+                LoginScreen(
+                    onLoginClick = { email, password ->
+                        authViewModel.handleEvent(
+                            AuthEvent.OnLogin(email, password)
+                        )
+                    },
+                    onRegisterClick = { showRegister.value = true }
+                )
             }
+        }
 
-            is AuthState.Authorized -> {
-                HomeScreen()
-            }
+        is AuthState.Authorized -> {
+            ProfileScreen(
+                state = profileState,
+                isDarkTheme = isDarkTheme,
+                onThemeChange = onThemeChange,
+                onLogoutClick = { authViewModel.handleEvent(AuthEvent.OnLogout) },
+                onEvent = profileViewModel::handleEvent
+            )
         }
     }
 }
