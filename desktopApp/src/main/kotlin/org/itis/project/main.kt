@@ -7,6 +7,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import org.itis.project.sharedlogic.feature.auth.impl.di.createAppModule
 import org.itis.project.sharedlogic.di.logicModule
+import org.itis.project.sharedlogic.di.networkModule
 import org.itis.project.sharedui.App
 import org.itis.project.sharedui.di.uiModule
 import org.koin.core.context.GlobalContext
@@ -17,6 +18,7 @@ fun main() = application {
         startKoin {
             modules(
                 logicModule,
+                networkModule,
                 createAppModule(DesktopPlatformDependencies()),
                 uiModule
             )

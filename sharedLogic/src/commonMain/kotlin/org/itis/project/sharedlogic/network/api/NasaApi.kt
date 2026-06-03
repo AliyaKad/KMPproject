@@ -10,8 +10,7 @@ import org.itis.project.sharedlogic.network.pojo.response.ApodResponse
 class NasaApi(private val client: HttpClient) {
 
     suspend fun getApod(date: String? = null): ApodResponse =
-        client.get("https://api.nasa.gov/planetary/apod") {
-            parameter("api_key", BuildConfig.NASA_API_KEY)
+        client.get("http://localhost:5000/v1/apod/") {
             date?.let { parameter("date", it) }
         }.body()
 }

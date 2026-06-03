@@ -1,18 +1,19 @@
-package org.itis.project.sharedlogic.presentation.home
+package org.itis.project.sharedlogic.presentation
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.data.ErrorContext
 import org.itis.project.sharedlogic.data.Errors
+import org.itis.project.sharedlogic.data.PlanetOfDay
 import org.itis.project.sharedlogic.data.repository.home.IssRepository
 import org.itis.project.sharedlogic.data.repository.home.NasaRepository
-import org.itis.project.sharedlogic.data.PlanetOfDay
 import org.itis.project.sharedlogic.domain.model.Apod
 import org.itis.project.sharedlogic.domain.model.IssPosition
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import java.util.Calendar
 
 data class HomeState(
     val greeting: String = "",
@@ -43,8 +44,7 @@ class HomeViewModel(
     }
 
     private fun load() {
-        val greeting = "Привет, исследователь космоса"
-
+        val greeting = getGreeting()
         val (planetName, planetFact) = PlanetOfDay.getPlanetOfDay()
 
         _state.value = _state.value.copy(
@@ -59,14 +59,31 @@ class HomeViewModel(
         loadIss()
     }
 
+    private fun getGreeting(): String {
+        val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        return when (hour) {
+            in 5..11 -> "Доброе утро, путник"
+            in 12..17 -> "Привет, исследователь"
+            in 18..22 -> "Добрый вечер, наблюдатель"
+            else -> "Ночь — лучшее время для звёзд"
+        }
+    }
+
     private fun loadApod() {
         viewModelScope.launch {
             runCatching { nasaRepo.apod() }
                 .onSuccess { apod ->
-                    _state.value = _state.value.copy(apod = apod, apodLoading = false, apodError = null)
+                    _state.value = _state.value.copy(
+                        apod = apod,
+                        apodLoading = false,
+                        apodError = null
+                    )
                 }
                 .onFailure { e ->
-                    _state.value = _state.value.copy(apodLoading = false, apodError = Errors.friendly(e, ErrorContext.Nasa))
+                    _state.value = _state.value.copy(
+                        apodLoading = false,
+                        apodError = Errors.friendly(e, ErrorContext.Nasa)
+                    )
                 }
         }
     }
@@ -75,10 +92,17 @@ class HomeViewModel(
         viewModelScope.launch {
             runCatching { issRepo.now() }
                 .onSuccess { pos ->
-                    _state.value = _state.value.copy(issPosition = pos, issLoading = false, issError = null)
+                    _state.value = _state.value.copy(
+                        issPosition = pos,
+                        issLoading = false,
+                        issError = null
+                    )
                 }
                 .onFailure { e ->
-                    _state.value = _state.value.copy(issLoading = false, issError = Errors.friendly(e, ErrorContext.Iss))
+                    _state.value = _state.value.copy(
+                        issLoading = false,
+                        issError = Errors.friendly(e, ErrorContext.Iss)
+                    )
                 }
         }
     }

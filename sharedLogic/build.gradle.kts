@@ -32,6 +32,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.serialization.core)
 
                 implementation(libs.bundles.ktorClientCommon)
 
@@ -60,6 +61,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.okhttp3.logging.interceptor)
                 implementation(libs.sqldelight.sqlite.driver)
             }
         }

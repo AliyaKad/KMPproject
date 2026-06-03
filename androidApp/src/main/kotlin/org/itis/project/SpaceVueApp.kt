@@ -3,6 +3,7 @@ package org.itis.project
 import android.app.Application
 import org.itis.project.sharedlogic.feature.auth.impl.di.createAppModule
 import org.itis.project.sharedlogic.di.logicModule
+import org.itis.project.sharedlogic.di.networkModule
 import org.itis.project.sharedui.di.uiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -14,6 +15,7 @@ class SpaceVueApp : Application() {
             androidContext(this@SpaceVueApp)
             modules(
                 logicModule,
+                networkModule,
                 createAppModule(AndroidPlatformDependencies(this@SpaceVueApp)),
                 uiModule
             )

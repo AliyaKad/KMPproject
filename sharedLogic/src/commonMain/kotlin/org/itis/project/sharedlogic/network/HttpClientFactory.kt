@@ -1,20 +1,9 @@
 package org.itis.project.sharedlogic.network
 
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import io.ktor.client.engine.HttpClientEngineConfig
+import io.ktor.client.engine.HttpClientEngineFactory
 
-fun createHttpClient(): HttpClient = HttpClient {
-    install(ContentNegotiation) {
-        json(Json {
-            ignoreUnknownKeys = true
-            isLenient = true
-        })
-    }
-    install(Logging) {
-        level = LogLevel.INFO
-    }
+expect open class HttpEngineFactory() {
+
+    fun createEngine(): HttpClientEngineFactory<HttpClientEngineConfig>
 }

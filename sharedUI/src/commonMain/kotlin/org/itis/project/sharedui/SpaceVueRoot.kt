@@ -20,6 +20,7 @@ import org.itis.project.sharedui.features.auth.RegisterScreen
 import org.itis.project.sharedui.features.auth.AuthEvent
 import org.itis.project.sharedui.features.auth.AuthState
 import org.itis.project.sharedui.features.auth.AuthViewModel
+import org.itis.project.sharedui.features.home.HomeScreen
 import org.itis.project.sharedui.features.profile.ProfileScreen
 import org.itis.project.sharedui.features.profile.ProfileViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -36,55 +37,57 @@ fun SpaceVueRoot(
             .build()
     }
 
-    val authViewModel: AuthViewModel = koinViewModel()
-    val profileViewModel: ProfileViewModel = koinViewModel()
+    HomeScreen()
 
-    val authState by authViewModel.state.collectAsState()
-    val profileState by profileViewModel.state.collectAsState()
-
-    val showRegister = remember { mutableStateOf(false) }
-
-    when (authState) {
-        is AuthState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-        }
-
-        is AuthState.Unauthorized,
-        is AuthState.Error -> {
-            if (showRegister.value) {
-                RegisterScreen(
-                    onRegisterClick = { email, username, password ->
-                        authViewModel.handleEvent(
-                            AuthEvent.OnRegister(email, username, password)
-                        )
-                    },
-                    onBackToLogin = { showRegister.value = false }
-                )
-            } else {
-                LoginScreen(
-                    onLoginClick = { email, password ->
-                        authViewModel.handleEvent(
-                            AuthEvent.OnLogin(email, password)
-                        )
-                    },
-                    onRegisterClick = { showRegister.value = true }
-                )
-            }
-        }
-
-        is AuthState.Authorized -> {
-            ProfileScreen(
-                state = profileState,
-                isDarkTheme = isDarkTheme,
-                onThemeChange = onThemeChange,
-                onLogoutClick = { authViewModel.handleEvent(AuthEvent.OnLogout) },
-                onEvent = profileViewModel::handleEvent
-            )
-        }
-    }
+//    val authViewModel: AuthViewModel = koinViewModel()
+//    val profileViewModel: ProfileViewModel = koinViewModel()
+//
+//    val authState by authViewModel.state.collectAsState()
+//    val profileState by profileViewModel.state.collectAsState()
+//
+//    val showRegister = remember { mutableStateOf(false) }
+//
+//    when (authState) {
+//        is AuthState.Loading -> {
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+//            }
+//        }
+//
+//        is AuthState.Unauthorized,
+//        is AuthState.Error -> {
+//            if (showRegister.value) {
+//                RegisterScreen(
+//                    onRegisterClick = { email, username, password ->
+//                        authViewModel.handleEvent(
+//                            AuthEvent.OnRegister(email, username, password)
+//                        )
+//                    },
+//                    onBackToLogin = { showRegister.value = false }
+//                )
+//            } else {
+//                LoginScreen(
+//                    onLoginClick = { email, password ->
+//                        authViewModel.handleEvent(
+//                            AuthEvent.OnLogin(email, password)
+//                        )
+//                    },
+//                    onRegisterClick = { showRegister.value = true }
+//                )
+//            }
+//        }
+//
+//        is AuthState.Authorized -> {
+//            ProfileScreen(
+//                state = profileState,
+//                isDarkTheme = isDarkTheme,
+//                onThemeChange = onThemeChange,
+//                onLogoutClick = { authViewModel.handleEvent(AuthEvent.OnLogout) },
+//                onEvent = profileViewModel::handleEvent
+//            )
+//        }
+//    }
 }

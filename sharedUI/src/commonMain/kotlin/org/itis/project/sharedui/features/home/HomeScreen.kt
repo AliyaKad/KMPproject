@@ -16,9 +16,8 @@ import org.itis.project.sharedui.components.ButtonVariant
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
-import org.itis.project.sharedui.theme.spaceColors
 import org.itis.project.sharedui.common.formatCoord
-import org.itis.project.sharedlogic.presentation.home.HomeViewModel
+import org.itis.project.sharedlogic.presentation.HomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
