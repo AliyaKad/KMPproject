@@ -4,7 +4,7 @@ import org.itis.project.sharedlogic.feature.main.api.model.Apod
 import org.itis.project.sharedlogic.feature.main.api.repository.NasaRepository
 import org.itis.project.sharedlogic.feature.main.api.usecase.GetApodUseCase
 
-class GetApodUseCaseImpl(
+internal class GetApodUseCaseImpl(
     private val repository: NasaRepository
 ): GetApodUseCase {
     override suspend fun invoke(): Apod {

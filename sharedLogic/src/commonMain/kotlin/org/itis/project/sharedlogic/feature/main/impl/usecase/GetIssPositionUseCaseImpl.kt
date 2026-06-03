@@ -4,7 +4,7 @@ import org.itis.project.sharedlogic.feature.main.api.model.IssPosition
 import org.itis.project.sharedlogic.feature.main.api.repository.IssRepository
 import org.itis.project.sharedlogic.feature.main.api.usecase.GetIssPositionUseCase
 
-class GetIssPositionUseCaseImpl(
+internal class GetIssPositionUseCaseImpl(
     private val repository: IssRepository
 ): GetIssPositionUseCase {
 
