@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import org.itis.project.sharedlogic.feature.main.impl.presentation.HomeEvent
+import org.itis.project.sharedlogic.presentation.home.HomeViewModel
 import org.itis.project.sharedui.components.AppButton
 import org.itis.project.sharedui.components.AppCard
 import org.itis.project.sharedui.components.ButtonVariant
@@ -17,13 +19,17 @@ import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
 import org.itis.project.sharedui.common.formatCoord
-import org.itis.project.sharedlogic.presentation.HomeViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen() {
+
     val vm: HomeViewModel = koinViewModel()
     val state by vm.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        vm.obtainIntent(HomeEvent.Load)
+    }
 
     SpaceTheme {
         GradientBackground {
@@ -149,7 +155,7 @@ fun HomeScreen() {
 
                 // Кнопка обновления
                 AppButton(
-                    onClick = { vm.refresh() },
+                    onClick = { vm.obtainIntent(HomeEvent.Refresh) },
                     text = "Обновить данные",
                     variant = ButtonVariant.Primary,
                     modifier = Modifier.fillMaxWidth()

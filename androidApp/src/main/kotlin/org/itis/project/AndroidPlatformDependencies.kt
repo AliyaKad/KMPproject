@@ -4,7 +4,7 @@ import android.content.Context
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import org.itis.project.sharedlogic.Database
-import org.itis.project.sharedlogic.di.PlatformDependencies
+import org.itis.project.sharedlogic.core.di.PlatformDependencies
 import org.itis.project.sharedlogic.feature.auth.AndroidUserPreferences
 import org.itis.project.sharedlogic.feature.auth.impl.data.UserPreferences
 

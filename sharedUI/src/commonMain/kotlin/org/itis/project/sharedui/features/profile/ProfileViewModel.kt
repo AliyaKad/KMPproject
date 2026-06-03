@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.itis.project.sharedlogic.domain.usecase.auth.GetThemeUseCase
-import org.itis.project.sharedlogic.domain.usecase.auth.GetCurrentUserUseCase
-import org.itis.project.sharedlogic.domain.usecase.auth.UpdateThemeUseCase
+import org.itis.project.sharedlogic.core.domain.usecase.auth.GetThemeUseCase
+import org.itis.project.sharedlogic.core.domain.usecase.auth.GetCurrentUserUseCase
+import org.itis.project.sharedlogic.core.domain.usecase.auth.UpdateThemeUseCase
 
 class ProfileViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,

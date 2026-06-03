@@ -5,11 +5,11 @@ import org.itis.project.domain.LoginUseCase
 import org.itis.project.domain.LogoutUseCase
 import org.itis.project.domain.RegisterUseCase
 import org.itis.project.sharedlogic.Database
-import org.itis.project.sharedlogic.data.repository.auth.AuthRepository
-import org.itis.project.sharedlogic.di.PlatformDependencies
-import org.itis.project.sharedlogic.domain.usecase.auth.GetThemeUseCase
-import org.itis.project.sharedlogic.domain.usecase.auth.GetCurrentUserUseCase
-import org.itis.project.sharedlogic.domain.usecase.auth.UpdateThemeUseCase
+import org.itis.project.sharedlogic.core.data.repository.auth.AuthRepository
+import org.itis.project.sharedlogic.core.di.PlatformDependencies
+import org.itis.project.sharedlogic.core.domain.usecase.auth.GetThemeUseCase
+import org.itis.project.sharedlogic.core.domain.usecase.auth.GetCurrentUserUseCase
+import org.itis.project.sharedlogic.core.domain.usecase.auth.UpdateThemeUseCase
 import org.itis.project.sharedlogic.feature.auth.impl.data.UserDao
 import org.itis.project.sharedlogic.feature.auth.impl.data.UserPreferences
 import org.koin.dsl.module
