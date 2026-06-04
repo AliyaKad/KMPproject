@@ -1,29 +1,12 @@
 package org.itis.project.sharedui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
-import org.itis.project.sharedui.features.auth.LoginScreen
-import org.itis.project.sharedui.features.auth.RegisterScreen
-import org.itis.project.sharedui.features.auth.AuthEvent
-import org.itis.project.sharedui.features.auth.AuthState
-import org.itis.project.sharedui.features.auth.AuthViewModel
+import org.itis.project.sharedui.features.apod.ApodDetailScreen
 import org.itis.project.sharedui.features.home.HomeScreen
-import org.itis.project.sharedui.features.profile.ProfileScreen
-import org.itis.project.sharedui.features.profile.ProfileViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SpaceVueRoot(
@@ -37,7 +20,8 @@ fun SpaceVueRoot(
             .build()
     }
 
-    HomeScreen()
+    //HomeScreen()
+    ApodDetailScreen(date = "2025-06-03", onBack = { /* пока ничего */ })
 
 //    val authViewModel: AuthViewModel = koinViewModel()
 //    val profileViewModel: ProfileViewModel = koinViewModel()

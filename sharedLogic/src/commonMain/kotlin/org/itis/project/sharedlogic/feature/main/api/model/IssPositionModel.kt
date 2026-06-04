@@ -1,6 +1,6 @@
 package org.itis.project.sharedlogic.feature.main.api.model
 
-data class IssPosition(
+data class IssPositionModel(
     val latitude: Double,
     val longitude: Double,
     val timestampSeconds: Long
