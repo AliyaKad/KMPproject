@@ -22,7 +22,7 @@ fun SpaceVueRoot(
             .build()
     }
 
-    //HomeScreen()
+    HomeScreen()
     //ApodDetailScreen(date = "2025-06-03", onBack = { /* пока ничего */ })
 
 //    PlanetsScreen(
@@ -32,10 +32,10 @@ fun SpaceVueRoot(
 //        }
 //    )
 
-    PlanetDetailScreen(
-        planetId = "terre",   // id Земли в API
-        onBack = { /* пока ничего */ }
-    )
+//    PlanetDetailScreen(
+//        planetId = "terre",   // id Земли в API
+//        onBack = { /* пока ничего */ }
+//    )
 
 
 //    val authViewModel: AuthViewModel = koinViewModel()

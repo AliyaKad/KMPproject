@@ -1,6 +1,5 @@
 package org.itis.project.sharedlogic.feature.planets.impl.presentation
 
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.core.viewmodel.BaseViewModel
 import org.itis.project.sharedlogic.feature.planets.api.usecase.GetPlanetsUseCase
@@ -22,19 +21,19 @@ class PlanetsViewModel : BaseViewModel<PlanetsState, PlanetsIntent, Nothing>(
     override fun obtainIntent(intent: PlanetsIntent) {
         when (intent) {
             PlanetsIntent.Load -> load()
-            is PlanetsIntent.Search -> setState { it.copy(query = intent.query) }
+            is PlanetsIntent.Search -> updateState { it.copy(query = intent.query) }
         }
     }
 
     private fun load() {
-        setState { it.copy(isLoading = true, error = null) }
+        updateState { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             runCatching { getPlanetsUseCase() }
                 .onSuccess { planets ->
-                    setState { it.copy(isLoading = false, planets = planets, error = null) }
+                    updateState { it.copy(isLoading = false, planets = planets, error = null) }
                 }
                 .onFailure { e ->
-                    setState { it.copy(isLoading = false, error = e.message) }
+                    updateState { it.copy(isLoading = false, error = e.message) }
                 }
         }
     }

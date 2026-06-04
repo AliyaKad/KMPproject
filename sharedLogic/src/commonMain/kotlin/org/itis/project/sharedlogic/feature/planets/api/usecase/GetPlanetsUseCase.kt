@@ -1,7 +1,7 @@
 package org.itis.project.sharedlogic.feature.planets.api.usecase
 
-import org.itis.project.sharedlogic.feature.planets.api.model.PlanetModel
+import org.itis.project.sharedlogic.feature.planets.api.model.PlanetSummaryModel
 
 interface GetPlanetsUseCase {
-    suspend operator fun invoke(): List<PlanetModel>
+    suspend operator fun invoke(): List<PlanetSummaryModel>
 }

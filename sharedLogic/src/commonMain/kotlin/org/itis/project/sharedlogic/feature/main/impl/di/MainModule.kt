@@ -10,7 +10,11 @@ import org.itis.project.sharedlogic.feature.main.api.usecase.GetIssPositionUseCa
 import org.itis.project.sharedlogic.feature.main.impl.repository.IssRepositoryImpl
 import org.itis.project.sharedlogic.feature.main.impl.repository.NasaRepositoryImpl
 import org.itis.project.sharedlogic.feature.main.impl.usecase.GetIssPositionUseCaseImpl
-import org.itis.project.sharedlogic.presentation.home.HomeViewModel
+import org.itis.project.sharedlogic.feature.main.api.usecase.GetGreetingUseCase
+import org.itis.project.sharedlogic.feature.planets.api.usecase.GetPlanetOfDayUseCase
+import org.itis.project.sharedlogic.feature.main.impl.usecase.GetGreetingUseCaseImpl
+import org.itis.project.sharedlogic.feature.planets.impl.usecase.GetPlanetOfDayUseCaseImpl
+import org.itis.project.sharedlogic.feature.main.impl.presentation.HomeViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -24,6 +28,8 @@ val mainModule = module {
 
     factory<GetApodUseCase> { GetApodUseCaseImpl(get()) }
     factory<GetIssPositionUseCase> { GetIssPositionUseCaseImpl(get()) }
+    factory<GetPlanetOfDayUseCase> { GetPlanetOfDayUseCaseImpl() }
+    factory<GetGreetingUseCase> { GetGreetingUseCaseImpl() }
 
     factoryOf(::HomeViewModel)
 }

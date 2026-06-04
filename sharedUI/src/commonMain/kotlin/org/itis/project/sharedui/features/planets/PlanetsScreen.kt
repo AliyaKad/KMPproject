@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import org.itis.project.sharedlogic.feature.planets.api.model.PlanetModel
+import org.itis.project.sharedlogic.feature.planets.api.model.PlanetSummaryModel
 import org.itis.project.sharedlogic.feature.planets.impl.presentation.PlanetsIntent
 import org.itis.project.sharedlogic.feature.planets.impl.presentation.PlanetsViewModel
 import org.itis.project.sharedui.components.GradientBackground
@@ -79,7 +79,7 @@ fun PlanetsScreen(
 
 @Composable
 private fun PlanetCard(
-    planet: PlanetModel,
+    planet: PlanetSummaryModel,
     onClick: () -> Unit
 ) {
     Surface(

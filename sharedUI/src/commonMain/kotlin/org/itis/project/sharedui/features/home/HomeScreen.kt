@@ -6,12 +6,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import org.itis.project.sharedlogic.feature.main.impl.presentation.HomeEvent
-import org.itis.project.sharedlogic.presentation.home.HomeViewModel
+import org.itis.project.sharedlogic.feature.main.impl.presentation.HomeViewModel
 import org.itis.project.sharedui.components.AppButton
 import org.itis.project.sharedui.components.AppCard
 import org.itis.project.sharedui.components.ButtonVariant
@@ -19,16 +20,21 @@ import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
 import org.itis.project.sharedui.common.formatCoord
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeScreen() {
 
-    val vm: HomeViewModel = koinViewModel()
+    val vm: HomeViewModel = retain { HomeViewModel() }
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
         vm.obtainIntent(HomeEvent.Load)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            vm.clear()
+        }
     }
 
     SpaceTheme {

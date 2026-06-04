@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 
 abstract class BaseViewModel<State : Any, Intent : Any, Effect : Any>(
     initialState: State
-) : ViewModel() {
+) : CommonViewModel()  {
 
     private val _state = MutableStateFlow(initialState)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -19,7 +19,7 @@ abstract class BaseViewModel<State : Any, Intent : Any, Effect : Any>(
     private val _effect = MutableSharedFlow<Effect>()
     val effect: SharedFlow<Effect> = _effect.asSharedFlow()
 
-    protected fun setState(block: (State) -> State) {
+    protected fun updateState(block: (State) -> State) {
         _state.update(block)
     }
 
