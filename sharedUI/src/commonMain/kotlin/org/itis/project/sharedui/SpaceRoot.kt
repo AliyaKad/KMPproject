@@ -7,6 +7,8 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import org.itis.project.sharedui.features.apod.ApodDetailScreen
 import org.itis.project.sharedui.features.home.HomeScreen
+import org.itis.project.sharedui.features.planets.PlanetDetailScreen
+import org.itis.project.sharedui.features.planets.PlanetsScreen
 
 @Composable
 fun SpaceVueRoot(
@@ -21,7 +23,20 @@ fun SpaceVueRoot(
     }
 
     //HomeScreen()
-    ApodDetailScreen(date = "2025-06-03", onBack = { /* пока ничего */ })
+    //ApodDetailScreen(date = "2025-06-03", onBack = { /* пока ничего */ })
+
+//    PlanetsScreen(
+//        onPlanetClick = { planetId ->
+//            // Пока просто выводим в консоль (позже заменим на навигацию)
+//            println("Clicked on planet: $planetId")
+//        }
+//    )
+
+    PlanetDetailScreen(
+        planetId = "terre",   // id Земли в API
+        onBack = { /* пока ничего */ }
+    )
+
 
 //    val authViewModel: AuthViewModel = koinViewModel()
 //    val profileViewModel: ProfileViewModel = koinViewModel()
