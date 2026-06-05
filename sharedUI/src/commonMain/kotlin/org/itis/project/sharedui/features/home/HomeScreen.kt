@@ -1,5 +1,6 @@
 package org.itis.project.sharedui.features.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,11 +21,15 @@ import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
 import org.itis.project.sharedui.common.formatCoord
+import org.koin.compose.koinInject
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onNavigateToApod: () -> Unit = {},
+    onNavigateToPlanetDetail: (String) -> Unit = {}
+) {
 
-    val vm: HomeViewModel = retain { HomeViewModel() }
+    val vm: HomeViewModel = koinInject()
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -54,7 +59,10 @@ fun HomeScreen() {
                 )
 
                 // Картинка дня от NASA
-                AppCard(glassEffect = true) {
+                AppCard(
+                    glassEffect = true,
+                    modifier = Modifier.clickable { onNavigateToApod() }
+                ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
@@ -102,7 +110,10 @@ fun HomeScreen() {
                 }
 
                 // Планета дня
-                AppCard(glassEffect = true) {
+                AppCard(
+                    glassEffect = true,
+                    modifier = Modifier.clickable { onNavigateToPlanetDetail("terre") }
+                ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)

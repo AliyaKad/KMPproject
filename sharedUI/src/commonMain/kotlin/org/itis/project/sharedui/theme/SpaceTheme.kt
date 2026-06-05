@@ -3,6 +3,7 @@ package org.itis.project.sharedui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val LocalSpaceColors = staticCompositionLocalOf { SpaceColors() }
@@ -15,6 +16,31 @@ data class SpaceColors(
     val accentGlow: Color = Color(0x40C9B6F5),
     val starColor: Color = Color(0xFFFFFFFF)
 )
+
+object BackdropColor {
+    val Aurora = Color(0xFF7A5CFA)
+    val DeepSpace = Color(0xFF05060D)
+    val Midnight = Color(0xFF0B1024)
+    val Nebula = Color(0xFF1A1F3A)
+
+    fun nebulaGradient(): Brush = Brush.verticalGradient(
+        listOf(DeepSpace, Midnight, Nebula)
+    )
+
+    fun lightSkyGradient(): Brush = Brush.verticalGradient(
+        listOf(Color(0xFFE6ECFA), Color(0xFFF6F7FC))
+    )
+}
+
+data class SpaceVisuals(
+    val isDark: Boolean,
+    val animationsEnabled: Boolean
+)
+
+val LocalSpaceVisuals = staticCompositionLocalOf {
+    SpaceVisuals(isDark = true, animationsEnabled = true)
+}
+
 
 @Composable
 fun SpaceTheme(

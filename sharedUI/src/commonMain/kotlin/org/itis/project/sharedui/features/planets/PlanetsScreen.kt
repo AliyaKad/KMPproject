@@ -24,6 +24,7 @@ import org.itis.project.sharedui.design.Loading
 import org.itis.project.sharedui.design.SearchField
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -31,7 +32,7 @@ fun PlanetsScreen(
     onPlanetClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val vm: PlanetsViewModel = koinViewModel()
+    val vm: PlanetsViewModel = koinInject()
     val state by vm.state.collectAsState()
 
     SpaceTheme {

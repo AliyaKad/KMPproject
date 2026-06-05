@@ -1,17 +1,28 @@
 package org.itis.project.sharedui
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation3.runtime.NavKey
 import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
-import org.itis.project.sharedui.features.apod.ApodDetailScreen
-import org.itis.project.sharedui.features.home.HomeScreen
-import org.itis.project.sharedui.features.planets.PlanetDetailScreen
-import org.itis.project.sharedui.features.planets.PlanetsScreen
+import org.itis.project.sharedui.components.StarryBackdrop
+import org.itis.project.sharedui.nav.HomeRoute
+import org.itis.project.sharedui.nav.NavHost
+import org.itis.project.sharedui.nav.components.rememberNavController
+import org.itis.project.sharedui.nav.ui.BottomBar
+import org.itis.project.sharedui.nav.ui.NavRail
+import org.itis.project.sharedui.theme.SpaceTheme
 
 @Composable
-fun SpaceVueRoot(
+fun SpaceRoot(
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit
 ) {
@@ -22,20 +33,43 @@ fun SpaceVueRoot(
             .build()
     }
 
-    HomeScreen()
-    //ApodDetailScreen(date = "2025-06-03", onBack = { /* пока ничего */ })
+    val navController = rememberNavController(startDestination = HomeRoute)
 
-//    PlanetsScreen(
-//        onPlanetClick = { planetId ->
-//            // Пока просто выводим в консоль (позже заменим на навигацию)
-//            println("Clicked on planet: $planetId")
-//        }
-//    )
+    fun onTopLevelRouteSelected(route: NavKey) {
+        if (navController.last() == route) return
+        navController.clear()
+        navController += route
+    }
 
-//    PlanetDetailScreen(
-//        planetId = "terre",   // id Земли в API
-//        onBack = { /* пока ничего */ }
-//    )
+    SpaceTheme(darkTheme = isDarkTheme) {
+        StarryBackdrop {
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                val isWide = maxWidth >= 720.dp
+
+                if (isWide) {
+                    Row(Modifier.fillMaxSize()) {
+                        NavRail(
+                            current = navController.last(),
+                            onSelect = ::onTopLevelRouteSelected
+                        )
+                        NavHost(navController = navController)
+                    }
+                } else {
+                    Column(Modifier.fillMaxSize()) {
+                        Box(Modifier.fillMaxSize().weight(1f)) {
+                            NavHost(navController = navController)
+                        }
+                        BottomBar(
+                            current = navController.last(),
+                            onSelect = ::onTopLevelRouteSelected
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
 
 
 //    val authViewModel: AuthViewModel = koinViewModel()

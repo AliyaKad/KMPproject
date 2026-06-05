@@ -22,6 +22,7 @@ import org.itis.project.sharedlogic.feature.main.impl.presentation.ApodDetailVie
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -29,7 +30,7 @@ fun ApodDetailScreen(
     date: String,
     onBack: () -> Unit
 ) {
-    val vm: ApodDetailViewModel = koinViewModel()
+    val vm: ApodDetailViewModel = koinInject()
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {

@@ -12,7 +12,7 @@ fun App() {
     var isDarkTheme by remember { mutableStateOf(true) }
 
     SpaceTheme(darkTheme = isDarkTheme) {
-        SpaceVueRoot(
+        SpaceRoot(
             isDarkTheme = isDarkTheme,
             onThemeChange = { isDarkTheme = it }
         )
