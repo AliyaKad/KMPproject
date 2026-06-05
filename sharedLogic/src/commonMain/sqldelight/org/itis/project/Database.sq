@@ -1,4 +1,4 @@
-CREATE TABLE favorite_apod (
+CREATE TABLE IF NOT EXISTS favorite_apod (
     date TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     explanation TEXT NOT NULL,
@@ -8,18 +8,6 @@ CREATE TABLE favorite_apod (
     copyright TEXT,
     added_at INTEGER NOT NULL
 );
-
-INSERT OR REPLACE INTO favorite_apod (
-    date, title, explanation, url, hdurl, media_type, copyright, added_at
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
-
-DELETE FROM favorite_apod WHERE date = ?;
-
-SELECT * FROM favorite_apod ORDER BY added_at DESC;
-
-SELECT * FROM favorite_apod WHERE date = ?;
-
-SELECT COUNT(*) FROM favorite_apod;
 
 CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +23,19 @@ CREATE TABLE IF NOT EXISTS sessions (
     last_login TEXT NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
+
+INSERT OR REPLACE INTO favorite_apod (
+    date, title, explanation, url, hdurl, media_type, copyright, added_at
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+DELETE FROM favorite_apod WHERE date = ?;
+
+SELECT * FROM favorite_apod ORDER BY added_at DESC;
+
+SELECT * FROM favorite_apod WHERE date = ?;
+
+SELECT COUNT(*) FROM favorite_apod;
+
 
 selectUserByEmail:
 SELECT *
