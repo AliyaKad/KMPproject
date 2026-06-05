@@ -1,4 +1,4 @@
-package org.itis.project.sharedui.features.auth
+package org.itis.project.sharedlogic.feature.auth.impl.presentation
 
 import org.itis.project.domain.User
 

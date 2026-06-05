@@ -1,4 +1,4 @@
-package org.itis.project.sharedui.features.profile
+package org.itis.project.sharedlogic.feature.profile.impl.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,14 +6,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.itis.project.sharedlogic.core.domain.usecase.auth.GetThemeUseCase
-import org.itis.project.sharedlogic.core.domain.usecase.auth.GetCurrentUserUseCase
-import org.itis.project.sharedlogic.core.domain.usecase.auth.UpdateThemeUseCase
+import org.itis.project.sharedlogic.feature.profile.impl.domain.GetCurrentUserUseCaseImpl
+import org.itis.project.sharedlogic.feature.profile.impl.domain.GetThemeUseCaseImpl
+import org.itis.project.sharedlogic.feature.profile.impl.domain.UpdateThemeUseCaseImpl
 
 class ProfileViewModel(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val updateThemeUseCase: UpdateThemeUseCase,
-    private val getThemeUseCase: GetThemeUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCaseImpl,
+    private val updateThemeUseCase: UpdateThemeUseCaseImpl,
+    private val getThemeUseCase: GetThemeUseCaseImpl
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileState())

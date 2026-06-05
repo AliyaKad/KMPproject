@@ -1,4 +1,4 @@
-package org.itis.project.sharedui.features.auth
+package org.itis.project.sharedlogic.feature.auth.impl.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,16 +6,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.itis.project.domain.CheckAuthUseCase
-import org.itis.project.domain.LoginUseCase
-import org.itis.project.domain.LogoutUseCase
-import org.itis.project.domain.RegisterUseCase
+import org.itis.project.sharedlogic.feature.auth.impl.domain.LoginUseCaseImpl
+import org.itis.project.sharedlogic.feature.auth.impl.domain.LogoutUseCaseImpl
+import org.itis.project.sharedlogic.feature.auth.impl.domain.RegisterUseCaseImpl
+import org.itis.project.sharedlogic.feature.auth.impl.domain.CheckAuthUseCaseImpl
 
 class AuthViewModel(
-    private val loginUseCase: LoginUseCase,
-    private val registerUseCase: RegisterUseCase,
-    private val checkAuthUseCase: CheckAuthUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val loginUseCase: LoginUseCaseImpl,
+    private val registerUseCase: RegisterUseCaseImpl,
+    private val checkAuthUseCase: CheckAuthUseCaseImpl,
+    private val logoutUseCase: LogoutUseCaseImpl
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
@@ -84,4 +84,3 @@ class AuthViewModel(
         }
     }
 }
-

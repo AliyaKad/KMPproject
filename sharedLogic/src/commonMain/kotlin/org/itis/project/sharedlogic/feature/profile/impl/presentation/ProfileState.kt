@@ -1,4 +1,4 @@
-package org.itis.project.sharedui.features.profile
+package org.itis.project.sharedlogic.feature.profile.impl.presentation
 
 import org.itis.project.domain.User
 
