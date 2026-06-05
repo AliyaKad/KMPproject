@@ -15,7 +15,7 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import org.itis.project.sharedui.components.StarryBackdrop
 import org.itis.project.sharedui.nav.HomeRoute
-import org.itis.project.sharedui.nav.NavHost
+import org.itis.project.sharedui.nav.components.NavHost
 import org.itis.project.sharedui.nav.components.rememberNavController
 import org.itis.project.sharedui.nav.ui.BottomBar
 import org.itis.project.sharedui.nav.ui.NavRail

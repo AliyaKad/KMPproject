@@ -17,13 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailEvent
-import org.itis.project.sharedlogic.feature.main.impl.presentation.ApodDetailViewModel
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailEvent
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailViewModel
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun ApodDetailScreen(
@@ -190,7 +189,7 @@ fun ApodDetailScreen(
                                 modifier = Modifier.padding(top = 8.dp)
                             )
                             Spacer(modifier = Modifier.height(16.dp))
-                            Button(onClick = { vm.obtainIntent(ApodDetailEvent.Load(date)) }) {
+                            Button(onClick = { date?.let { vm.obtainIntent(ApodDetailEvent.Load(it)) } }) {
                                 Text("Повторить")
                             }
                         }

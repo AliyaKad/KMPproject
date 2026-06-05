@@ -1,4 +1,4 @@
-package org.itis.project.sharedlogic.feature.apod.impl.presentation
+package org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail
 
 import org.itis.project.sharedlogic.feature.main.api.model.ApodModel
 

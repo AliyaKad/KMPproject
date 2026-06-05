@@ -11,9 +11,9 @@ val RouteConfig = SavedStateConfiguration {
     serializersModule = SerializersModule {
         polymorphic(NavKey::class) {
             subclass(HomeRoute::class, HomeRoute.serializer())
-            subclass(ApodRoute::class, ApodRoute.serializer())
+            subclass(ApodSearchRoute::class, ApodSearchRoute.serializer())
             subclass(PlanetsRoute::class, PlanetsRoute.serializer())
-            subclass(IssRoute::class, IssRoute.serializer())
+            subclass(ApodDetailRoute::class, ApodDetailRoute.serializer())
             subclass(FavoritesRoute::class, FavoritesRoute.serializer())
             subclass(ProfileRoute::class, ProfileRoute.serializer())
             subclass(PlanetDetailRoute::class, PlanetDetailRoute.serializer())

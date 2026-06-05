@@ -54,6 +54,8 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.core)
 
                 implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlinx.datetime)
+
             }
         }
 

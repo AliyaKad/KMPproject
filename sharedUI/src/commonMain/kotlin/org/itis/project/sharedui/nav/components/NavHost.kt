@@ -1,18 +1,27 @@
-package org.itis.project.sharedui.nav
+package org.itis.project.sharedui.nav.components
 
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import org.itis.project.sharedui.features.apod.ApodDetailScreen
+import org.itis.project.sharedui.features.apod.ApodSearchScreen
 import org.itis.project.sharedui.features.home.HomeScreen
 import org.itis.project.sharedui.features.planets.PlanetDetailScreen
 import org.itis.project.sharedui.features.planets.PlanetsScreen
-import org.itis.project.sharedui.nav.components.RouteConfig
-import org.itis.project.sharedui.nav.components.goBack
+import org.itis.project.sharedui.nav.ApodDetailRoute
+import org.itis.project.sharedui.nav.ApodSearchRoute
+import org.itis.project.sharedui.nav.FavoritesRoute
+import org.itis.project.sharedui.nav.HomeRoute
+import org.itis.project.sharedui.nav.PlanetDetailRoute
+import org.itis.project.sharedui.nav.PlanetsRoute
+import org.itis.project.sharedui.nav.ProfileRoute
+import kotlin.collections.plusAssign
+import kotlin.time.ExperimentalTime
 
+
+@OptIn(ExperimentalTime::class)
 @Composable
 fun NavHost(
     navController: NavBackStack<NavKey>
@@ -26,9 +35,10 @@ fun NavHost(
             when (key) {
 
                 is HomeRoute -> NavEntry(key) {
+
                     HomeScreen(
-                        onNavigateToApod = {
-                            navController += ApodRoute
+                        onNavigateToApodDetail = {
+                            navController += ApodDetailRoute(date = "")
                         },
                         onNavigateToPlanetDetail = { planetId ->
                             navController += PlanetDetailRoute(planetId)
@@ -36,10 +46,22 @@ fun NavHost(
                     )
                 }
 
-                is ApodRoute -> NavEntry(key) {
+                is ApodDetailRoute -> NavEntry(key) {
                     ApodDetailScreen(
-                        date = "2025-06-03",
-                        onBack = {  navController.goBack() }
+                        date = key.date,
+                        onBack = {
+                            navController.goBack()
+                        }
+                    )
+                }
+                is ApodSearchRoute -> NavEntry(key) {
+                    ApodSearchScreen(
+                        onBack = {
+                            navController.goBack()
+                        },
+                        onNavigateToDetail = { date ->
+                            navController += ApodDetailRoute(date)
+                        }
                     )
                 }
 
@@ -51,8 +73,6 @@ fun NavHost(
                     )
                 }
 
-
-                is IssRoute -> NavEntry(key) {}
 
                 is FavoritesRoute -> NavEntry(key) {}
 

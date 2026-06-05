@@ -25,7 +25,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun HomeScreen(
-    onNavigateToApod: () -> Unit = {},
+    onNavigateToApodDetail: () -> Unit = {},
     onNavigateToPlanetDetail: (String) -> Unit = {}
 ) {
 
@@ -61,7 +61,7 @@ fun HomeScreen(
                 // Картинка дня от NASA
                 AppCard(
                     glassEffect = true,
-                    modifier = Modifier.clickable { onNavigateToApod() }
+                    modifier = Modifier.clickable { onNavigateToApodDetail() }
                 ) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),

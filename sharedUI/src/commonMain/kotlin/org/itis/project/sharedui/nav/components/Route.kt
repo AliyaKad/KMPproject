@@ -9,7 +9,7 @@ data object HomeRoute : NavKey {
 }
 
 @Serializable
-data object ApodRoute : NavKey {
+data object ApodSearchRoute : NavKey {
 }
 
 @Serializable
@@ -17,8 +17,7 @@ data object PlanetsRoute : NavKey {
 }
 
 @Serializable
-data object IssRoute : NavKey {
-}
+class ApodDetailRoute(val date: String) : NavKey
 
 @Serializable
 data object FavoritesRoute : NavKey {
@@ -34,18 +33,17 @@ data class PlanetDetailRoute(val id: String) : NavKey {
 
 val TopLevelRoutes = listOf(
     HomeRoute,
-    ApodRoute,
+    ApodSearchRoute,
     PlanetsRoute,
-    IssRoute,
     FavoritesRoute,
     ProfileRoute
 )
 
 fun NavKey.label(): String = when (this) {
     HomeRoute -> "Главная"
-    ApodRoute -> "NASA"
+    ApodSearchRoute -> "NASA"
     PlanetsRoute -> "Планеты"
-    IssRoute -> "МКС"
+    ApodDetailRoute -> "DAY NASA"
     FavoritesRoute -> "Избранное"
     ProfileRoute -> "Профиль"
     is PlanetDetailRoute -> "Планета"
@@ -53,6 +51,6 @@ fun NavKey.label(): String = when (this) {
 }
 
 fun NavKey.isTopLevel(): Boolean = when (this) {
-    HomeRoute, ApodRoute, PlanetsRoute, IssRoute, FavoritesRoute, ProfileRoute -> true
+    HomeRoute, ApodSearchRoute, PlanetsRoute, FavoritesRoute, ProfileRoute -> true
     else -> false
 }

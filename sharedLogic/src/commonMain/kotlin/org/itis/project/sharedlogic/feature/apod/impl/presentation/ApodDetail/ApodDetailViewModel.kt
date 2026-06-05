@@ -1,11 +1,11 @@
-package org.itis.project.sharedlogic.feature.main.impl.presentation
+package org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail
 
 import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.core.viewmodel.BaseViewModel
 import org.itis.project.sharedlogic.feature.apod.api.usecase.GetApodByDateUseCase
-import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailEffect as Effect
-import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailEvent as Event
-import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailState as State
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailEffect as Effect
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailEvent as Event
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailState as State
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
