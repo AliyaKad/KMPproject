@@ -1,7 +1,7 @@
 package org.itis.project.sharedui.di
 
-import org.itis.project.sharedui.features.auth.AuthViewModel
-import org.itis.project.sharedui.features.profile.ProfileViewModel
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthViewModel
+import org.itis.project.sharedlogic.feature.profile.impl.presentation.ProfileViewModel
 import org.koin.dsl.module
 
 val uiModule = module {

@@ -33,6 +33,7 @@ fun HomeScreen(
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        vm.onScreenOpen()
         vm.obtainIntent(HomeEvent.Load)
     }
 

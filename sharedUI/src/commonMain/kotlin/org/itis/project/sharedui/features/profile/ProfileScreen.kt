@@ -24,6 +24,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.itis.project.domain.User
+import org.itis.project.sharedlogic.feature.profile.impl.presentation.ProfileEvent
+import org.itis.project.sharedlogic.feature.profile.impl.presentation.ProfileState
 import org.itis.project.sharedui.components.AppButton
 import org.itis.project.sharedui.components.AppCard
 import org.itis.project.sharedui.components.ButtonVariant

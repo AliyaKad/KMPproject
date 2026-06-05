@@ -1,19 +1,25 @@
 package org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail
 
 import kotlinx.coroutines.launch
-import org.itis.project.sharedlogic.core.viewmodel.BaseViewModel
 import org.itis.project.sharedlogic.feature.apod.api.usecase.GetApodByDateUseCase
 import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailEffect as Effect
 import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailEvent as Event
 import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailState as State
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.itis.project.sharedlogic.analytics.AnalyticsViewModel
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetail.ApodDetailState
 
-class ApodDetailViewModel : BaseViewModel<State, Event, Effect>(
-    initialState = State()
-), KoinComponent {
+
+class ApodDetailViewModel : AnalyticsViewModel<State, Event, Effect>(
+    initialState = ApodDetailState()
+) {
 
     private val getApodByDateUseCase: GetApodByDateUseCase by inject()
+
+    fun onScreenOpen(date: String) {
+        logScreenOpen("apod_detail")
+        obtainIntent(Event.Load(date))
+    }
 
     override fun obtainIntent(intent: Event) {
         when (intent) {
@@ -32,6 +38,10 @@ class ApodDetailViewModel : BaseViewModel<State, Event, Effect>(
                 }
                 .onFailure { e ->
                     updateState { it.copy(isLoading = false, error = e.message) }
+                    logEvent("error_occurred", mapOf(
+                        "error_message" to (e.message ?: "unknown"),
+                        "context" to "apod_detail_load_${date}"
+                    ))
                 }
         }
     }

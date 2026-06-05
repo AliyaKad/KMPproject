@@ -1,13 +1,13 @@
 package org.itis.project.sharedlogic.feature.auth.impl.data
 
-import org.itis.project.sharedlogic.Database
+import org.itis.project.Database
 import org.itis.project.domain.Session
 import org.itis.project.domain.User
 
 class UserDao(private val db: Database) {
 
     suspend fun getUserByEmail(email: String): User? {
-        return db.userQueries.selectUserByEmail(email)
+        return db.databaseQueries.selectUserByEmail(email)
             .executeAsOneOrNull()
             ?.let { query ->
                 User(
@@ -21,7 +21,7 @@ class UserDao(private val db: Database) {
     }
 
     suspend fun getUserById(userId: Long): User? {
-        return db.userQueries.selectUserById(userId)
+        return db.databaseQueries.selectUserById(userId)
             .executeAsOneOrNull()
             ?.let { query ->
                 User(
@@ -40,7 +40,7 @@ class UserDao(private val db: Database) {
         passwordHash: String,
         avatarColor: String
     ): Long {
-        db.userQueries.insertUser(
+        db.databaseQueries.insertUser(
             email = email,
             username = username,
             password_hash = passwordHash,
@@ -52,14 +52,14 @@ class UserDao(private val db: Database) {
 
     suspend fun saveSession(userId: Long) {
         val now = System.currentTimeMillis().toString()
-        db.userQueries.insertOrReplaceSession(
+        db.databaseQueries.insertOrReplaceSession(
             user_id = userId,
             last_login = now
         )
     }
 
     suspend fun getSession(userId: Long): Session? {
-        return db.userQueries.selectSession(userId)
+        return db.databaseQueries.selectSession(userId)
             .executeAsOneOrNull()
             ?.let { query ->
                 Session(
@@ -71,10 +71,10 @@ class UserDao(private val db: Database) {
     }
 
     suspend fun clearSession(userId: Long) {
-        db.userQueries.deleteSession(userId)
+        db.databaseQueries.deleteSession(userId)
     }
 
     suspend fun clearAllSessions() {
-        db.userQueries.clearAllSessions()
+        db.databaseQueries.clearAllSessions()
     }
 }

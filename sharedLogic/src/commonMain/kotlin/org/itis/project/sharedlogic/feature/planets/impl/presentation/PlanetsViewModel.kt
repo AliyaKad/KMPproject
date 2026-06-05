@@ -1,21 +1,23 @@
 package org.itis.project.sharedlogic.feature.planets.impl.presentation
 
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.itis.project.sharedlogic.core.viewmodel.BaseViewModel
+import org.itis.project.sharedlogic.analytics.AnalyticsViewModel
 import org.itis.project.sharedlogic.feature.planets.api.usecase.GetPlanetsUseCase
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-
-class PlanetsViewModel : BaseViewModel<PlanetsState, PlanetsIntent, Nothing>(
+class PlanetsViewModel : AnalyticsViewModel<PlanetsState, PlanetsIntent, Nothing>(
     PlanetsState()
-), KoinComponent {
+) {
 
     private val getPlanetsUseCase: GetPlanetsUseCase by inject()
 
-
     init {
         obtainIntent(PlanetsIntent.Load)
+    }
+
+    fun onScreenOpen() {
+        logScreenOpen("planets_list")
     }
 
     override fun obtainIntent(intent: PlanetsIntent) {

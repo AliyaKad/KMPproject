@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.googleService)
+    alias(libs.plugins.crashlytics)
 }
 
 android {
@@ -66,4 +68,8 @@ dependencies {
 
     implementation(libs.koin.android)
     implementation(libs.sqldelight.android.driver)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation("com.google.firebase:firebase-crashlytics-ktx:19.4.0")
 }
