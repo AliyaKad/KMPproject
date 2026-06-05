@@ -5,7 +5,6 @@ import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.analytics.AnalyticsViewModel
 import org.itis.project.sharedlogic.core.data.ErrorContext
 import org.itis.project.sharedlogic.core.data.Errors
-import org.itis.project.sharedlogic.core.data.PlanetOfDay
 import org.itis.project.sharedlogic.core.viewmodel.BaseViewModel
 import org.itis.project.sharedlogic.feature.main.api.usecase.GetApodUseCase
 import org.itis.project.sharedlogic.feature.main.api.usecase.GetIssPositionUseCase

@@ -1,10 +1,10 @@
 package org.itis.project.sharedlogic.feature.auth.impl.di
 
+import org.itis.project.Database
 import org.itis.project.sharedlogic.feature.auth.impl.domain.CheckAuthUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.LoginUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.LogoutUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.RegisterUseCaseImpl
-import org.itis.project.sharedlogic.Database
 import org.itis.project.sharedlogic.feature.auth.impl.data.AuthRepository
 import org.itis.project.sharedlogic.core.di.PlatformDependencies
 import org.itis.project.sharedlogic.feature.auth.api.domain.CheckAuthUseCase
