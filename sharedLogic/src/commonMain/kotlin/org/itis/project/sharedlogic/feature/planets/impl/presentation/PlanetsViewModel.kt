@@ -20,21 +20,11 @@ class PlanetsViewModel : AnalyticsViewModel<PlanetsState, PlanetsIntent, Nothing
         logScreenOpen("planets_list")
     }
 
-    fun logPlanetClick(planetId: String, planetName: String) {
-        logEvent("planet_click", mapOf(
-            "planet_id" to planetId,
-            "planet_name" to planetName
-        ))
-    }
-
     override fun obtainIntent(intent: PlanetsIntent) {
         when (intent) {
             PlanetsIntent.Load -> load()
             is PlanetsIntent.Search -> {
                 setState { it.copy(query = intent.query) }
-                if (intent.query.isNotBlank()) {
-                    logEvent("search_planets", mapOf("query" to intent.query))
-                }
             }
         }
     }
@@ -45,11 +35,9 @@ class PlanetsViewModel : AnalyticsViewModel<PlanetsState, PlanetsIntent, Nothing
             runCatching { getPlanetsUseCase() }
                 .onSuccess { planets ->
                     setState { it.copy(isLoading = false, planets = planets, error = null) }
-                    logEvent("planets_loaded", mapOf("count" to planets.size.toString()))
                 }
                 .onFailure { e ->
                     setState { it.copy(isLoading = false, error = e.message) }
-                    logEvent("planets_load_error", mapOf("error" to (e.message ?: "unknown")))
                 }
         }
     }

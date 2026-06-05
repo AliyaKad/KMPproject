@@ -33,6 +33,7 @@ fun ApodDetailScreen(
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        vm.onScreenOpen(date)
         vm.obtainIntent(ApodDetailEvent.Load(date))
     }
 
@@ -51,7 +52,6 @@ fun ApodDetailScreen(
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
                     ) {
-                        // Hero image
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -63,7 +63,6 @@ fun ApodDetailScreen(
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
-                            // Overlay gradient for better text contrast
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
@@ -77,7 +76,6 @@ fun ApodDetailScreen(
                                         )
                                     )
                             )
-                            // Back button overlay
                             IconButton(
                                 onClick = onBack,
                                 modifier = Modifier
@@ -96,14 +94,12 @@ fun ApodDetailScreen(
                             }
                         }
 
-                        // Content
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(Dimens.spacing16),
                             verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
                         ) {
-                            // Title row with favorite and share buttons
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -132,7 +128,6 @@ fun ApodDetailScreen(
                                 }
                             }
 
-                            // Date chip
                             Surface(
                                 shape = MaterialTheme.shapes.small,
                                 color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
@@ -145,7 +140,6 @@ fun ApodDetailScreen(
                                 )
                             }
 
-                            // Copyright
                             apod.copyright?.let { copyright ->
                                 Text(
                                     text = "© $copyright",
@@ -154,7 +148,6 @@ fun ApodDetailScreen(
                                 )
                             }
 
-                            // Explanation
                             Card(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = CardDefaults.cardColors(

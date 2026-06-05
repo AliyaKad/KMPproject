@@ -28,6 +28,7 @@ fun HomeScreen() {
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        vm.onScreenOpen()
         vm.obtainIntent(HomeEvent.Load)
     }
 
@@ -40,14 +41,12 @@ fun HomeScreen() {
                     .padding(Dimens.spacing16),
                 verticalArrangement = Arrangement.spacedBy(Dimens.spacing16)
             ) {
-                // Приветствие
                 Text(
                     text = state.greeting,
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                // Картинка дня от NASA
                 AppCard(glassEffect = true) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -95,7 +94,6 @@ fun HomeScreen() {
                     }
                 }
 
-                // Планета дня
                 AppCard(glassEffect = true) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -119,7 +117,6 @@ fun HomeScreen() {
                     }
                 }
 
-                // Позиция МКС
                 AppCard(glassEffect = true) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -153,7 +150,6 @@ fun HomeScreen() {
                     }
                 }
 
-                // Кнопка обновления
                 AppButton(
                     onClick = { vm.obtainIntent(HomeEvent.Refresh) },
                     text = "Обновить данные",

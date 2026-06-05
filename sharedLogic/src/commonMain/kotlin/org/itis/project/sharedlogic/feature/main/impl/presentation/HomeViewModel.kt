@@ -2,6 +2,7 @@ package org.itis.project.sharedlogic.presentation.home
 
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.itis.project.sharedlogic.analytics.AnalyticsViewModel
 import org.itis.project.sharedlogic.core.data.ErrorContext
 import org.itis.project.sharedlogic.core.data.Errors
 import org.itis.project.sharedlogic.core.data.PlanetOfDay
@@ -15,15 +16,21 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.util.Calendar
 
-class HomeViewModel() : BaseViewModel<HomeState, HomeEvent, HomeEffect>(
+
+
+class HomeViewModel : AnalyticsViewModel<HomeState, HomeEvent, HomeEffect>(
     initialState = HomeState()
-), KoinComponent {
+) {
 
     private val getApodUseCase: GetApodUseCase by inject()
     private val getIssPositionUseCase: GetIssPositionUseCase by inject()
 
     init {
         obtainIntent(HomeEvent.Load)
+    }
+
+    fun onScreenOpen() {
+        logScreenOpen("home")
     }
 
     override fun obtainIntent(intent: HomeEvent) {
@@ -71,6 +78,10 @@ class HomeViewModel() : BaseViewModel<HomeState, HomeEvent, HomeEffect>(
                 }
                 .onFailure { e ->
                     setState { it.copy(apodLoading = false, apodError = Errors.friendly(e, ErrorContext.Nasa)) }
+                    logEvent("error_occurred", mapOf(
+                        "error_message" to (e.message ?: "unknown"),
+                        "context" to "apod_load"
+                    ))
                 }
         }
     }
@@ -83,6 +94,10 @@ class HomeViewModel() : BaseViewModel<HomeState, HomeEvent, HomeEffect>(
                 }
                 .onFailure { e ->
                     setState { it.copy(issLoading = false, issError = Errors.friendly(e, ErrorContext.Iss)) }
+                    logEvent("error_occurred", mapOf(
+                        "error_message" to (e.message ?: "unknown"),
+                        "context" to "iss_load"
+                    ))
                 }
         }
     }

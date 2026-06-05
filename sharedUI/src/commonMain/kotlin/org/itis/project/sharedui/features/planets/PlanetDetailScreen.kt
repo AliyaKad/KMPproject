@@ -33,6 +33,7 @@ fun PlanetDetailScreen(
     val state by vm.state.collectAsState()
 
     LaunchedEffect(Unit) {
+        vm.onScreenOpen(planetId)
         vm.obtainIntent(PlanetDetailIntent.Load(planetId))
     }
 

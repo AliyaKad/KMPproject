@@ -98,7 +98,6 @@ fun PlanetsScreen(
                             PlanetCard(
                                 planet = planet,
                                 onClick = {
-                                    vm.logPlanetClick(planet.id, planet.name)
                                     onPlanetClick(planet.id)
                                 }
                             )

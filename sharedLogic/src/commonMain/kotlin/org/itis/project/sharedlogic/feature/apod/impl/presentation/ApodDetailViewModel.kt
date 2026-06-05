@@ -9,12 +9,20 @@ import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailEve
 import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailState as State
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.itis.project.sharedlogic.analytics.AnalyticsViewModel
+import org.itis.project.sharedlogic.feature.apod.impl.presentation.ApodDetailState
 
-class ApodDetailViewModel : BaseViewModel<State, Event, Effect>(
-    initialState = State()
-), KoinComponent {
+
+class ApodDetailViewModel : AnalyticsViewModel<State, Event, Effect>(
+    initialState = ApodDetailState()
+) {
 
     private val getApodByDateUseCase: GetApodByDateUseCase by inject()
+
+    fun onScreenOpen(date: String) {
+        logScreenOpen("apod_detail")
+        obtainIntent(Event.Load(date))
+    }
 
     override fun obtainIntent(intent: Event) {
         when (intent) {
@@ -33,6 +41,10 @@ class ApodDetailViewModel : BaseViewModel<State, Event, Effect>(
                 }
                 .onFailure { e ->
                     setState { it.copy(isLoading = false, error = e.message) }
+                    logEvent("error_occurred", mapOf(
+                        "error_message" to (e.message ?: "unknown"),
+                        "context" to "apod_detail_load_${date}"
+                    ))
                 }
         }
     }

@@ -6,18 +6,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.itis.project.sharedlogic.analytics.AnalyticsService
 import org.itis.project.sharedlogic.feature.auth.impl.domain.LoginUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.LogoutUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.RegisterUseCaseImpl
 import org.itis.project.sharedlogic.feature.auth.impl.domain.CheckAuthUseCaseImpl
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class AuthViewModel(
     private val loginUseCase: LoginUseCaseImpl,
     private val registerUseCase: RegisterUseCaseImpl,
     private val checkAuthUseCase: CheckAuthUseCaseImpl,
     private val logoutUseCase: LogoutUseCaseImpl
-) : ViewModel() {
+) : ViewModel(), KoinComponent {
 
+    private val analyticsService: AnalyticsService by inject()
+
+    fun onLoginScreenOpen() {
+        analyticsService.logEvent("screen_open", mapOf("screen_name" to "login"))
+    }
+
+    fun onRegisterScreenOpen() {
+        analyticsService.logEvent("screen_open", mapOf("screen_name" to "register"))
+    }
     private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
     val state: StateFlow<AuthState> = _state.asStateFlow()
 
