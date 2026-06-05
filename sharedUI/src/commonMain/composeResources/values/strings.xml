@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SpaceVue</string>
+
+    <string name="login_title">SpaceVue</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_register_button">Don\'t have an account? Register</string>
+
+    <string name="register_title">Create Account</string>
+    <string name="register_username_label">Username</string>
+    <string name="register_confirm_password_label">Confirm Password</string>
+    <string name="register_button">Register</string>
+    <string name="register_back_button">Back to Login</string>
+
+    <string name="error_email_empty">Email не может быть пустым</string>
+    <string name="error_email_invalid">Введите корректный email</string>
+    <string name="error_password_empty">Пароль не может быть пустым</string>
+    <string name="error_password_min_length">Пароль должен содержать минимум 6 символов</string>
+    <string name="error_username_empty">Имя пользователя не может быть пустым</string>
+    <string name="error_username_min_length">Имя пользователя должно содержать минимум 3 символа</string>
+    <string name="error_username_max_length">Имя пользователя не должно превышать 20 символов</string>
+    <string name="error_username_invalid">Имя пользователя может содержать только буквы, цифры и подчёркивание</string>
+    <string name="error_password_no_digit">Пароль должен содержать хотя бы одну цифру</string>
+    <string name="error_password_no_letter">Пароль должен содержать хотя бы одну букву</string>
+    <string name="error_confirm_password_empty">Подтвердите пароль</string>
+    <string name="error_password_mismatch">Пароли не совпадают</string>
+
+    <string name="home_apod_title">Картинка дня от NASA</string>
+    <string name="home_loading">Загрузка...</string>
+    <string name="home_planet_day_title">🌟 Планета дня</string>
+    <string name="home_iss_title">🛰️ Где сейчас МКС?</string>
+    <string name="home_refresh_button">Обновить данные</string>
+    <string name="home_latitude">Широта</string>
+    <string name="home_longitude">Долгота</string>
+
+    <string name="planets_title">Планеты</string>
+    <string name="planets_search_placeholder">Поиск планет…</string>
+    <string name="planets_test_crash">TEST CRASH</string>
+    <string name="planets_loading">Загрузка...</string>
+
+    <string name="planet_detail_gravity">Гравитация</string>
+    <string name="planet_detail_radius">Средний радиус</string>
+    <string name="planet_detail_mass">Масса</string>
+    <string name="planet_detail_volume">Объём</string>
+    <string name="planet_detail_temperature">Температура</string>
+    <string name="planet_detail_perihelion">Перигелий</string>
+    <string name="planet_detail_aphelion">Афелий</string>
+    <string name="planet_detail_moons">Спутники</string>
+    <string name="planet_detail_interesting_fact">Интересный факт</string>
+    <string name="planet_detail_back">Назад</string>
+    <string name="planet_detail_favorite">В избранное</string>
+
+    <string name="favorites_title">Избранное</string>
+    <string name="favorites_empty_title">✨ Нет избранного</string>
+    <string name="favorites_empty_description">Добавляйте понравившиеся фото NASA в избранное</string>
+    <string name="favorites_retry">Повторить</string>
+    <string name="favorites_remove">Удалить</string>
+
+    <string name="profile_title">Профиль</string>
+    <string name="profile_theme">Тема приложения</string>
+    <string name="profile_theme_dark">Тёмная</string>
+    <string name="profile_theme_light">Светлая</string>
+    <string name="profile_logout">Выйти из аккаунта</string>
+    <string name="profile_guest">Гость</string>
+    <string name="profile_not_authorized">Не авторизован</string>
+    <string name="profile_account_id">ID аккаунта</string>
+</resources>
