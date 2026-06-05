@@ -1,10 +1,8 @@
-package org.itis.project.sharedlogic.core.data.repository.auth
+package org.itis.project.sharedlogic.feature.auth.impl.data
 
 import org.itis.project.domain.User
 import org.itis.project.domain.generateAvatarColor
 import org.itis.project.domain.hashPassword
-import org.itis.project.sharedlogic.feature.auth.impl.data.UserDao
-import org.itis.project.sharedlogic.feature.auth.impl.data.UserPreferences
 
 class AuthRepository(
     private val userDao: UserDao,

@@ -5,7 +5,7 @@ import org.itis.project.domain.LoginUseCase
 import org.itis.project.domain.LogoutUseCase
 import org.itis.project.domain.RegisterUseCase
 import org.itis.project.sharedlogic.Database
-import org.itis.project.sharedlogic.core.data.repository.auth.AuthRepository
+import org.itis.project.sharedlogic.feature.auth.impl.data.AuthRepository
 import org.itis.project.sharedlogic.core.di.PlatformDependencies
 import org.itis.project.sharedlogic.core.domain.usecase.auth.GetThemeUseCase
 import org.itis.project.sharedlogic.core.domain.usecase.auth.GetCurrentUserUseCase

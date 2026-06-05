@@ -5,12 +5,17 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +39,19 @@ fun PlanetsScreen(
     val vm: PlanetsViewModel = koinViewModel()
     val state by vm.state.collectAsState()
 
+    var shouldCrash by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        vm.onScreenOpen()
+    }
+
+    LaunchedEffect(shouldCrash) {
+        if (shouldCrash) {
+            vm.logEvent("test_crash_triggered", mapOf("screen" to "planets_list"))
+            throw RuntimeException("Test crash from SpaceVue - Planets Screen")
+        }
+    }
+
     SpaceTheme {
         GradientBackground {
             Column(
@@ -46,6 +64,15 @@ fun PlanetsScreen(
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
+                Spacer(modifier = Modifier.height(Dimens.spacing12))
+
+                Button(
+                    onClick = { shouldCrash = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("TEST CRASH")
+                }
+
                 Spacer(modifier = Modifier.height(Dimens.spacing12))
 
                 SearchField(
@@ -68,7 +95,13 @@ fun PlanetsScreen(
                         horizontalArrangement = Arrangement.spacedBy(Dimens.spacing12)
                     ) {
                         items(state.filteredPlanets, key = { it.id }) { planet ->
-                            PlanetCard(planet = planet, onClick = { onPlanetClick(planet.id) })
+                            PlanetCard(
+                                planet = planet,
+                                onClick = {
+                                    vm.logPlanetClick(planet.id, planet.name)
+                                    onPlanetClick(planet.id)
+                                }
+                            )
                         }
                     }
                 }

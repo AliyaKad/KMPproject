@@ -54,6 +54,8 @@ kotlin {
                 implementation(libs.sqldelight.android.driver)
                 implementation(libs.okhttp3.logging.interceptor)
                 implementation(libs.timber)
+                implementation("com.google.firebase:firebase-analytics-ktx:22.3.0")
+                implementation("com.google.firebase:firebase-crashlytics-ktx:19.4.0")
             }
         }
 

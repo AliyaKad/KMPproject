@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "524087278805",
+    "project_id": "kmpproject-4e9dc",
+    "storage_bucket": "kmpproject-4e9dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524087278805:android:910a74acdb322623d7b65c",
+        "android_client_info": {
+          "package_name": "org.itis.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB53nrhyIISoFnqGoqTjWnHRokLdtSUbpo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
