@@ -30,7 +30,10 @@ import org.itis.project.sharedui.components.AppButton
 import org.itis.project.sharedui.components.AppCard
 import org.itis.project.sharedui.components.ButtonVariant
 import org.itis.project.sharedui.components.GradientBackground
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ProfileScreen(
@@ -40,6 +43,15 @@ fun ProfileScreen(
     onLogoutClick: () -> Unit,
     onEvent: (ProfileEvent) -> Unit
 ) {
+    val profileTitle = stringResource(Res.string.profile_title)
+    val themeLabel = stringResource(Res.string.profile_theme)
+    val themeDark = stringResource(Res.string.profile_theme_dark)
+    val themeLight = stringResource(Res.string.profile_theme_light)
+    val logoutText = stringResource(Res.string.profile_logout)
+    val guestText = stringResource(Res.string.profile_guest)
+    val notAuthorizedText = stringResource(Res.string.profile_not_authorized)
+    val accountIdText = stringResource(Res.string.profile_account_id)
+
     LaunchedEffect(Unit) {
         onEvent(ProfileEvent.LoadProfile)
     }
@@ -74,7 +86,15 @@ fun ProfileScreen(
                     onThemeChange(value)
                     onEvent(ProfileEvent.UpdateTheme(value))
                 },
-                onLogoutClick = onLogoutClick
+                onLogoutClick = onLogoutClick,
+                profileTitle = profileTitle,
+                themeLabel = themeLabel,
+                themeDark = themeDark,
+                themeLight = themeLight,
+                logoutText = logoutText,
+                guestText = guestText,
+                notAuthorizedText = notAuthorizedText,
+                accountIdText = accountIdText
             )
         }
     }
@@ -85,7 +105,15 @@ fun ProfileContent(
     user: User?,
     isDarkTheme: Boolean,
     onThemeChange: (Boolean) -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    profileTitle: String,
+    themeLabel: String,
+    themeDark: String,
+    themeLight: String,
+    logoutText: String,
+    guestText: String,
+    notAuthorizedText: String,
+    accountIdText: String
 ) {
     GradientBackground {
         Column(
@@ -95,7 +123,7 @@ fun ProfileContent(
             verticalArrangement = Arrangement.spacedBy(Dimens.spacing16)
         ) {
             Text(
-                text = "Профиль",
+                text = profileTitle,
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -126,12 +154,12 @@ fun ProfileContent(
 
                         Column {
                             Text(
-                                text = user?.username ?: "Гость",
+                                text = user?.username ?: guestText,
                                 style = MaterialTheme.typography.titleLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = user?.email ?: "Не авторизован",
+                                text = user?.email ?: notAuthorizedText,
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -141,7 +169,7 @@ fun ProfileContent(
                     Spacer(modifier = Modifier.height(Dimens.spacing4))
 
                     Text(
-                        text = "ID аккаунта: ${user?.id ?: "—"}",
+                        text = "$accountIdText: ${user?.id ?: "—"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -156,12 +184,12 @@ fun ProfileContent(
                 ) {
                     Column {
                         Text(
-                            text = "Тема приложения",
+                            text = themeLabel,
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = if (isDarkTheme) "Темная" else "Светлая",
+                            text = if (isDarkTheme) themeDark else themeLight,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -175,7 +203,7 @@ fun ProfileContent(
 
             AppButton(
                 onClick = onLogoutClick,
-                text = "Выйти из аккаунта",
+                text = logoutText,
                 variant = ButtonVariant.Secondary,
                 modifier = Modifier.fillMaxWidth()
             )

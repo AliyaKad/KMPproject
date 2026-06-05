@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,9 +17,12 @@ import org.itis.project.sharedui.components.AppButton
 import org.itis.project.sharedui.components.AppCard
 import org.itis.project.sharedui.components.ButtonVariant
 import org.itis.project.sharedui.components.GradientBackground
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
 import org.itis.project.sharedui.common.formatCoord
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -31,6 +33,12 @@ fun HomeScreen(
 
     val vm: HomeViewModel = koinInject()
     val state by vm.state.collectAsState()
+
+    val apodTitle = stringResource(Res.string.home_apod_title)
+    val loadingText = stringResource(Res.string.home_loading)
+    val planetDayTitle = stringResource(Res.string.home_planet_day_title)
+    val issTitle = stringResource(Res.string.home_iss_title)
+    val refreshButton = stringResource(Res.string.home_refresh_button)
 
     LaunchedEffect(Unit) {
         vm.onScreenOpen()
@@ -52,14 +60,12 @@ fun HomeScreen(
                     .padding(Dimens.spacing16),
                 verticalArrangement = Arrangement.spacedBy(Dimens.spacing16)
             ) {
-                // Приветствие
                 Text(
                     text = state.greeting,
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
 
-                // Картинка дня от NASA
                 AppCard(
                     glassEffect = true,
                     modifier = Modifier.clickable { onNavigateToApodDetail() }
@@ -69,7 +75,7 @@ fun HomeScreen(
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
                     ) {
                         Text(
-                            text = "Картинка дня от NASA",
+                            text = apodTitle,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -80,7 +86,7 @@ fun HomeScreen(
                                     .height(200.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text("Загрузка...", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         } else if (state.apod != null) {
                             AsyncImage(
@@ -110,7 +116,6 @@ fun HomeScreen(
                     }
                 }
 
-                // Планета дня
                 AppCard(
                     glassEffect = true,
                     modifier = Modifier.clickable { onNavigateToPlanetDetail("terre") }
@@ -120,7 +125,7 @@ fun HomeScreen(
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
                     ) {
                         Text(
-                            text = "🌟 Планета дня",
+                            text = planetDayTitle,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -137,27 +142,26 @@ fun HomeScreen(
                     }
                 }
 
-                // Позиция МКС
                 AppCard(glassEffect = true) {
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
                     ) {
                         Text(
-                            text = "🛰️ Где сейчас МКС?",
+                            text = issTitle,
                             style = MaterialTheme.typography.titleLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         if (state.issLoading) {
-                            Text("Загрузка...", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         } else if (state.issPosition != null) {
                             Text(
-                                text = "Широта: ${formatCoord(state.issPosition!!.latitude)}°",
+                                text = "${stringResource(Res.string.home_latitude)}: ${formatCoord(state.issPosition!!.latitude)}°",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
-                                text = "Долгота: ${formatCoord(state.issPosition!!.longitude)}°",
+                                text = "${stringResource(Res.string.home_longitude)}: ${formatCoord(state.issPosition!!.longitude)}°",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -171,10 +175,9 @@ fun HomeScreen(
                     }
                 }
 
-                // Кнопка обновления
                 AppButton(
                     onClick = { vm.obtainIntent(HomeEvent.Refresh) },
-                    text = "Обновить данные",
+                    text = refreshButton,
                     variant = ButtonVariant.Primary,
                     modifier = Modifier.fillMaxWidth()
                 )

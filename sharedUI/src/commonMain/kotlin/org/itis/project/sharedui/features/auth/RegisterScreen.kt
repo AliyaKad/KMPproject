@@ -9,9 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.utils.isValidEmail
 import org.itis.project.sharedui.utils.isValidUsername
 import org.itis.project.sharedui.utils.isValidPassword
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun RegisterScreen(
@@ -30,31 +33,61 @@ fun RegisterScreen(
 
     var isRegisterEnabled by remember { mutableStateOf(false) }
 
+    val errorEmailEmpty = stringResource(Res.string.error_email_empty)
+    val errorEmailInvalid = stringResource(Res.string.error_email_invalid)
+    val errorUsernameEmpty = stringResource(Res.string.error_username_empty)
+    val errorUsernameMinLength = stringResource(Res.string.error_username_min_length)
+    val errorUsernameMaxLength = stringResource(Res.string.error_username_max_length)
+    val errorUsernameInvalid = stringResource(Res.string.error_username_invalid)
+    val errorPasswordEmpty = stringResource(Res.string.error_password_empty)
+    val errorPasswordMinLength = stringResource(Res.string.error_password_min_length)
+    val errorPasswordNoDigit = stringResource(Res.string.error_password_no_digit)
+    val errorPasswordNoLetter = stringResource(Res.string.error_password_no_letter)
+    val errorConfirmPasswordEmpty = stringResource(Res.string.error_confirm_password_empty)
+    val errorPasswordMismatch = stringResource(Res.string.error_password_mismatch)
+
+    val loginTitle = stringResource(Res.string.login_title)
+    val emailLabel = stringResource(Res.string.login_email_label)
+    val passwordLabel = stringResource(Res.string.login_password_label)
+    val registerTitle = stringResource(Res.string.register_title)
+    val usernameLabel = stringResource(Res.string.register_username_label)
+    val confirmPasswordLabel = stringResource(Res.string.register_confirm_password_label)
+    val registerButton = stringResource(Res.string.register_button)
+    val backToLogin = stringResource(Res.string.register_back_button)
+
     LaunchedEffect(email, username, password, confirmPassword) {
         emailError = when {
-            email.isBlank() -> "Email не может быть пустым"
-            !isValidEmail(email) -> "Введите корректный email"
+            email.isBlank() -> errorEmailEmpty
+            !isValidEmail(email) -> errorEmailInvalid
             else -> null
         }
 
         usernameError = when {
-            username.isBlank() -> "Имя пользователя не может быть пустым"
-            username.length < 3 -> "Имя пользователя должно содержать минимум 3 символа"
-            username.length > 20 -> "Имя пользователя не должно превышать 20 символов"
-            !isValidUsername(username) -> "Имя пользователя может содержать только буквы, цифры и подчёркивание"
+            username.isBlank() -> errorUsernameEmpty
+            username.length < 3 -> errorUsernameMinLength
+            username.length > 20 -> errorUsernameMaxLength
+            !isValidUsername(username) -> errorUsernameInvalid
             else -> null
         }
 
         passwordError = when {
-            password.isBlank() -> "Пароль не может быть пустым"
-            password.length < 6 -> "Пароль должен содержать минимум 6 символов"
-            !isValidPassword(password) -> "Пароль должен содержать хотя бы одну цифру и одну букву"
+            password.isBlank() -> errorPasswordEmpty
+            password.length < 6 -> errorPasswordMinLength
+            !isValidPassword(password) -> {
+                if (!password.any { it.isDigit() } && !password.any { it.isLetter() }) {
+                    "$errorPasswordNoDigit & $errorPasswordNoLetter"
+                } else if (!password.any { it.isDigit() }) {
+                    errorPasswordNoDigit
+                } else {
+                    errorPasswordNoLetter
+                }
+            }
             else -> null
         }
 
         confirmPasswordError = when {
-            confirmPassword.isBlank() -> "Подтвердите пароль"
-            password != confirmPassword -> "Пароли не совпадают"
+            confirmPassword.isBlank() -> errorConfirmPasswordEmpty
+            password != confirmPassword -> errorPasswordMismatch
             else -> null
         }
 
@@ -74,7 +107,7 @@ fun RegisterScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Create Account",
+            text = registerTitle,
             style = MaterialTheme.typography.headlineMedium
         )
 
@@ -83,7 +116,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(emailLabel) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
             isError = emailError != null,
@@ -96,7 +129,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Username") },
+            label = { Text(usernameLabel) },
             modifier = Modifier.fillMaxWidth(),
             isError = usernameError != null,
             supportingText = { usernameError?.let { Text(it, color = MaterialTheme.colorScheme.error) } },
@@ -108,7 +141,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(passwordLabel) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
@@ -122,7 +155,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
+            label = { Text(confirmPasswordLabel) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
@@ -142,13 +175,13 @@ fun RegisterScreen(
             modifier = Modifier.fillMaxWidth(),
             enabled = isRegisterEnabled
         ) {
-            Text("Register")
+            Text(registerButton)
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         TextButton(onClick = onBackToLogin) {
-            Text("Back to Login")
+            Text(backToLogin)
         }
     }
 }

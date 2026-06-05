@@ -9,7 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.utils.isValidEmail
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LoginScreen(
@@ -24,16 +27,21 @@ fun LoginScreen(
 
     var isLoginEnabled by remember { mutableStateOf(false) }
 
+    val errorEmailEmpty = stringResource(Res.string.error_email_empty)
+    val errorEmailInvalid = stringResource(Res.string.error_email_invalid)
+    val errorPasswordEmpty = stringResource(Res.string.error_password_empty)
+    val errorPasswordMinLength = stringResource(Res.string.error_password_min_length)
+
     LaunchedEffect(email, password) {
         emailError = when {
-            email.isBlank() -> "Email не может быть пустым"
-            !isValidEmail(email) -> "Введите корректный email"
+            email.isBlank() -> errorEmailEmpty
+            !isValidEmail(email) -> errorEmailInvalid
             else -> null
         }
 
         passwordError = when {
-            password.isBlank() -> "Пароль не может быть пустым"
-            password.length < 6 -> "Пароль должен содержать минимум 6 символов"
+            password.isBlank() -> errorPasswordEmpty
+            password.length < 6 -> errorPasswordMinLength
             else -> null
         }
 
@@ -47,7 +55,7 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "SpaceVue",
+            text = stringResource(Res.string.login_title),
             style = MaterialTheme.typography.headlineLarge
         )
 
@@ -56,7 +64,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(Res.string.login_email_label)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
             isError = emailError != null,
@@ -69,7 +77,7 @@ fun LoginScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(Res.string.login_password_label)) },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
@@ -85,13 +93,13 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             enabled = isLoginEnabled
         ) {
-            Text("Login")
+            Text(stringResource(Res.string.login_button))
         }
 
         Spacer(modifier = Modifier.height(12.dp))
 
         TextButton(onClick = onRegisterClick) {
-            Text("Don't have an account? Register")
+            Text(stringResource(Res.string.login_register_button))
         }
     }
 }

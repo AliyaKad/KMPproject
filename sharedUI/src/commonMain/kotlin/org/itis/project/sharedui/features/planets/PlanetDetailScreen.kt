@@ -19,10 +19,12 @@ import org.itis.project.sharedlogic.feature.planets.impl.presentation.PlanetDeta
 import org.itis.project.sharedui.common.formatBig
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.design.Loading
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun PlanetDetailScreen(
@@ -32,6 +34,18 @@ fun PlanetDetailScreen(
 ) {
     val vm: PlanetDetailViewModel = koinInject()
     val state by vm.state.collectAsState()
+
+    val backText = stringResource(Res.string.planet_detail_back)
+    val favoriteText = stringResource(Res.string.planet_detail_favorite)
+    val gravity = stringResource(Res.string.planet_detail_gravity)
+    val radius = stringResource(Res.string.planet_detail_radius)
+    val mass = stringResource(Res.string.planet_detail_mass)
+    val volume = stringResource(Res.string.planet_detail_volume)
+    val temperature = stringResource(Res.string.planet_detail_temperature)
+    val perihelion = stringResource(Res.string.planet_detail_perihelion)
+    val aphelion = stringResource(Res.string.planet_detail_aphelion)
+    val moons = stringResource(Res.string.planet_detail_moons)
+    val interestingFact = stringResource(Res.string.planet_detail_interesting_fact)
 
     LaunchedEffect(Unit) {
         vm.onScreenOpen(planetId)
@@ -46,7 +60,6 @@ fun PlanetDetailScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(Dimens.spacing16)
             ) {
-                // Заголовок с кнопкой назад и избранным
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -54,7 +67,7 @@ fun PlanetDetailScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Назад",
+                            contentDescription = backText,
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -68,7 +81,7 @@ fun PlanetDetailScreen(
                     IconButton(onClick = { vm.obtainIntent(PlanetDetailIntent.ToggleFavorite) }) {
                         Icon(
                             if (state.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = "В избранное",
+                            contentDescription = favoriteText,
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -84,7 +97,6 @@ fun PlanetDetailScreen(
                     )
                     state.detail != null -> {
                         val planet = state.detail!!
-                        // Карточка с контентом
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium,
@@ -110,17 +122,17 @@ fun PlanetDetailScreen(
                                         style = MaterialTheme.typography.labelLarge,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    StatRow("Гравитация", planet.gravity?.let { "${it} м/с²" } ?: "—")
-                                    StatRow("Средний радиус", planet.meanRadiusKm?.let { "${it.toLong()} км" } ?: "—")
-                                    StatRow("Масса", planet.massKg?.let { "${formatBig(it)} кг" } ?: "—")
-                                    StatRow("Объём", planet.volumeKm3?.let { "${formatBig(it)} км³" } ?: "—")
-                                    StatRow("Температура", planet.avgTemperatureK?.let { "${it.toInt()} K" } ?: "—")
-                                    StatRow("Перигелий", planet.perihelionKm?.let { "${formatBig(it)} км" } ?: "—")
-                                    StatRow("Афелий", planet.aphelionKm?.let { "${formatBig(it)} км" } ?: "—")
-                                    StatRow("Спутники", planet.moons.toString())
+                                    StatRow(gravity, planet.gravity?.let { "${it} м/с²" } ?: "—")
+                                    StatRow(radius, planet.meanRadiusKm?.let { "${it.toLong()} км" } ?: "—")
+                                    StatRow(mass, planet.massKg?.let { "${formatBig(it)} кг" } ?: "—")
+                                    StatRow(volume, planet.volumeKm3?.let { "${formatBig(it)} км³" } ?: "—")
+                                    StatRow(temperature, planet.avgTemperatureK?.let { "${it.toInt()} K" } ?: "—")
+                                    StatRow(perihelion, planet.perihelionKm?.let { "${formatBig(it)} км" } ?: "—")
+                                    StatRow(aphelion, planet.aphelionKm?.let { "${formatBig(it)} км" } ?: "—")
+                                    StatRow(moons, planet.moons.toString())
                                     Spacer(modifier = Modifier.height(Dimens.spacing8))
                                     Text(
-                                        text = "Интересный факт",
+                                        text = interestingFact,
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.onSurface
                                     )

@@ -9,7 +9,6 @@ plugins {
 }
 
 kotlin {
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -22,7 +21,6 @@ kotlin {
         }
     }
 
-
     sourceSets {
         commonMain {
             dependencies {
@@ -32,7 +30,7 @@ kotlin {
                 implementation(compose.ui)
                 implementation(compose.foundation)
                 implementation(compose.material3)
-                implementation(compose.components.resources)
+                implementation(compose.components.resources)  // ← для ресурсов
 
                 implementation(compose.materialIconsExtended)
 
@@ -55,10 +53,8 @@ kotlin {
 
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.kotlinx.datetime)
-
             }
         }
-
     }
 }
 
@@ -74,4 +70,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "org.itis.project.sharedui.generated.resources"
+    generateResClass = auto
 }

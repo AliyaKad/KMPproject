@@ -28,8 +28,11 @@ import org.itis.project.sharedlogic.feature.planets.impl.presentation.PlanetsVie
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.design.Loading
 import org.itis.project.sharedui.design.SearchField
+import org.itis.project.sharedui.generated.resources.Res
+import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.SpaceTheme
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -41,6 +44,10 @@ fun PlanetsScreen(
     val state by vm.state.collectAsState()
 
     var shouldCrash by remember { mutableStateOf(false) }
+
+    val planetsTitle = stringResource(Res.string.planets_title)
+    val searchPlaceholder = stringResource(Res.string.planets_search_placeholder)
+    val testCrashText = stringResource(Res.string.planets_test_crash)
 
     LaunchedEffect(Unit) {
         vm.onScreenOpen()
@@ -61,7 +68,7 @@ fun PlanetsScreen(
                     .padding(Dimens.spacing16)
             ) {
                 Text(
-                    text = "Планеты",
+                    text = planetsTitle,
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -71,7 +78,7 @@ fun PlanetsScreen(
                     onClick = { shouldCrash = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("TEST CRASH")
+                    Text(testCrashText)
                 }
 
                 Spacer(modifier = Modifier.height(Dimens.spacing12))
@@ -79,7 +86,7 @@ fun PlanetsScreen(
                 SearchField(
                     value = state.query,
                     onValueChange = { vm.obtainIntent(PlanetsIntent.Search(it)) },
-                    placeholder = "Поиск планет…"
+                    placeholder = searchPlaceholder
                 )
                 Spacer(modifier = Modifier.height(Dimens.spacing16))
 
@@ -90,7 +97,6 @@ fun PlanetsScreen(
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(Dimens.spacing16)
                     )
-
                     else -> LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 300.dp),
                         verticalArrangement = Arrangement.spacedBy(Dimens.spacing16),
@@ -176,6 +182,7 @@ private fun PlanetCard(
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+
                 }
             }
         }
