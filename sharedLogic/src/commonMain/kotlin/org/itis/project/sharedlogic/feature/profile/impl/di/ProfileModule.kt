@@ -8,10 +8,12 @@ import org.koin.dsl.module
 import org.itis.project.sharedlogic.feature.profile.impl.domain.GetCurrentUserUseCaseImpl
 import org.itis.project.sharedlogic.feature.profile.impl.domain.GetThemeUseCaseImpl
 import org.itis.project.sharedlogic.feature.profile.impl.domain.UpdateThemeUseCaseImpl
-
+import org.itis.project.sharedlogic.feature.profile.impl.presentation.ProfileViewModel
 
 
 val profileModule: Module = module {
+
+    factory { ProfileViewModel(get(), get(), get()) }
 
     single<GetCurrentUserUseCase> { GetCurrentUserUseCaseImpl(get()) }
     single<GetThemeUseCase> { GetThemeUseCaseImpl(get()) }

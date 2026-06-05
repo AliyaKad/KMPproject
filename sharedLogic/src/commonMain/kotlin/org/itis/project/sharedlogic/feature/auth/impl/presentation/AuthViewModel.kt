@@ -7,18 +7,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.itis.project.sharedlogic.analytics.AnalyticsService
-import org.itis.project.sharedlogic.feature.auth.impl.domain.LoginUseCaseImpl
-import org.itis.project.sharedlogic.feature.auth.impl.domain.LogoutUseCaseImpl
-import org.itis.project.sharedlogic.feature.auth.impl.domain.RegisterUseCaseImpl
-import org.itis.project.sharedlogic.feature.auth.impl.domain.CheckAuthUseCaseImpl
+import org.itis.project.sharedlogic.feature.auth.api.domain.CheckAuthUseCase
+import org.itis.project.sharedlogic.feature.auth.api.domain.LoginUseCase
+import org.itis.project.sharedlogic.feature.auth.api.domain.LogoutUseCase
+import org.itis.project.sharedlogic.feature.auth.api.domain.RegisterUseCase
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class AuthViewModel(
-    private val loginUseCase: LoginUseCaseImpl,
-    private val registerUseCase: RegisterUseCaseImpl,
-    private val checkAuthUseCase: CheckAuthUseCaseImpl,
-    private val logoutUseCase: LogoutUseCaseImpl
+    private val loginUseCase: LoginUseCase,
+    private val registerUseCase: RegisterUseCase,
+    private val checkAuthUseCase: CheckAuthUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel(), KoinComponent {
 
     private val analyticsService: AnalyticsService by inject()

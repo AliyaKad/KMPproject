@@ -3,7 +3,6 @@ package org.itis.project.sharedlogic.core.data
 import org.itis.project.sharedlogic.feature.planets.api.model.PlanetDetailModel
 import org.itis.project.sharedlogic.feature.planets.api.model.PlanetSummaryModel
 
-
 object PlanetAssets {
 
     data class Entry(

@@ -5,6 +5,14 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
+data object RegisterRoute: NavKey
+
+@Serializable
+data object AuthRoute: NavKey {
+
+}
+
+@Serializable
 data object HomeRoute : NavKey {
 }
 
@@ -43,10 +51,12 @@ fun NavKey.label(): String = when (this) {
     HomeRoute -> "Главная"
     ApodSearchRoute -> "NASA"
     PlanetsRoute -> "Планеты"
-    ApodDetailRoute -> "DAY NASA"
     FavoritesRoute -> "Избранное"
     ProfileRoute -> "Профиль"
+    is ApodDetailRoute -> "DAY NASA"
     is PlanetDetailRoute -> "Планета"
+    AuthRoute -> "Вход"
+    RegisterRoute -> "Регистрация"
     else -> ""
 }
 
