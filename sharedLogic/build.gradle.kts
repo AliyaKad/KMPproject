@@ -74,7 +74,8 @@ kotlin {
 sqldelight {
     databases {
         create("Database") {
-            packageName.set("org.itis.project.sharedlogic")
+            packageName.set("org.itis.project")
+            srcDirs("src/commonMain/sqldelight")
         }
     }
 }
