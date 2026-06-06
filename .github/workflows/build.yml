@@ -1,0 +1,110 @@
+name: Build & Lint
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android:
+    name: Android lint & assembleDebug
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Generate SQLDelight code
+        run: ./gradlew :sharedLogic:generateSqlDelightInterface --stacktrace
+
+      - name: Android lint (Debug)
+        run: ./gradlew :androidApp:lintDebug --stacktrace
+
+      - name: Upload lint reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-lint-reports
+          path: |
+            **/build/reports/lint-results-*.html
+            **/build/reports/lint-results-*.xml
+          if-no-files-found: ignore
+
+      - name: Assemble Android debug APK
+        run: ./gradlew :androidApp:assembleDebug --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: androidApp-debug
+          path: androidApp/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+  desktop:
+    name: Desktop JVM build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup X11 for desktop app
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxkbcommon-x11-0 libxrandr2 libgl1-mesa-glx libxrender1 libxi6 libxcursor1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' && github.ref != 'refs/heads/main' }}
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Generate SQLDelight code
+        run: ./gradlew :sharedLogic:generateSqlDelightInterface --stacktrace
+
+      - name: Compile shared modules
+        run: ./gradlew :sharedLogic:compileKotlinJvm :sharedUI:compileKotlinJvm --stacktrace
+
+      - name: Build desktop app
+        run: ./gradlew :desktopApp:assemble --stacktrace
+
+      - name: Upload desktop JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktopApp-jar
+          path: desktopApp/build/libs/*.jar
+          if-no-files-found: warn
