@@ -31,7 +31,6 @@ import org.itis.project.sharedui.design.SearchField
 import org.itis.project.sharedui.generated.resources.Res
 import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
-import org.itis.project.sharedui.theme.SpaceTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -43,73 +42,52 @@ fun PlanetsScreen(
     val vm: PlanetsViewModel = koinInject()
     val state by vm.state.collectAsState()
 
-    var shouldCrash by remember { mutableStateOf(false) }
-
     val planetsTitle = stringResource(Res.string.planets_title)
     val searchPlaceholder = stringResource(Res.string.planets_search_placeholder)
-    val testCrashText = stringResource(Res.string.planets_test_crash)
 
     LaunchedEffect(Unit) {
         vm.onScreenOpen()
     }
 
-    LaunchedEffect(shouldCrash) {
-        if (shouldCrash) {
-            vm.logEvent("test_crash_triggered", mapOf("screen" to "planets_list"))
-            throw RuntimeException("Test crash from SpaceVue - Planets Screen")
-        }
-    }
+    GradientBackground {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(Dimens.spacing16)
+        ) {
+            Text(
+                text = planetsTitle,
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(Dimens.spacing12))
 
-    SpaceTheme {
-        GradientBackground {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(Dimens.spacing16)
-            ) {
-                Text(
-                    text = planetsTitle,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onBackground
+            SearchField(
+                value = state.query,
+                onValueChange = { vm.obtainIntent(PlanetsIntent.Search(it)) },
+                placeholder = searchPlaceholder
+            )
+            Spacer(modifier = Modifier.height(Dimens.spacing16))
+
+            when {
+                state.isLoading -> Loading()
+                state.error != null -> Text(
+                    text = state.error!!,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(Dimens.spacing16)
                 )
-                Spacer(modifier = Modifier.height(Dimens.spacing12))
-
-                Button(
-                    onClick = { shouldCrash = true },
-                    modifier = Modifier.fillMaxWidth()
+                else -> LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 300.dp),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.spacing16),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.spacing16)
                 ) {
-                    Text(testCrashText)
-                }
-
-                Spacer(modifier = Modifier.height(Dimens.spacing12))
-
-                SearchField(
-                    value = state.query,
-                    onValueChange = { vm.obtainIntent(PlanetsIntent.Search(it)) },
-                    placeholder = searchPlaceholder
-                )
-                Spacer(modifier = Modifier.height(Dimens.spacing16))
-
-                when {
-                    state.isLoading -> Loading()
-                    state.error != null -> Text(
-                        text = state.error!!,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(Dimens.spacing16)
-                    )
-                    else -> LazyVerticalGrid(
-                        columns = GridCells.Adaptive(minSize = 300.dp),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.spacing16),
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.spacing16)
-                    ) {
-                        items(state.filteredPlanets, key = { it.id }) { planet ->
-                            PlanetCard(
-                                planet = planet,
-                                onClick = {
-                                    onPlanetClick(planet.id)
-                                }
-                            )
-                        }
+                    items(state.filteredPlanets, key = { it.id }) { planet ->
+                        PlanetCard(
+                            planet = planet,
+                            onClick = {
+                                onPlanetClick(planet.id)
+                            }
+                        )
                     }
                 }
             }

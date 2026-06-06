@@ -1,8 +1,13 @@
 package org.itis.project.sharedui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
@@ -37,7 +42,7 @@ data class SpaceVisuals(
     val animationsEnabled: Boolean
 )
 
-val LocalSpaceVisuals = staticCompositionLocalOf {
+val LocalSpaceVisuals = compositionLocalOf {
     SpaceVisuals(isDark = true, animationsEnabled = true)
 }
 
@@ -90,7 +95,15 @@ fun SpaceTheme(
         starColor = starColor
     )
 
-    CompositionLocalProvider(LocalSpaceColors provides spaceColors) {
+    val spaceVisuals = SpaceVisuals(
+        isDark = darkTheme,
+        animationsEnabled = true
+    )
+
+    CompositionLocalProvider(
+        LocalSpaceColors provides spaceColors,
+        LocalSpaceVisuals provides spaceVisuals
+    ) {
         MaterialTheme(
             colorScheme = colors,
             typography = SpaceTypography,

@@ -22,7 +22,6 @@ import org.itis.project.sharedui.design.Loading
 import org.itis.project.sharedui.generated.resources.Res
 import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
-import org.itis.project.sharedui.theme.SpaceTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -52,96 +51,87 @@ fun PlanetDetailScreen(
         vm.obtainIntent(PlanetDetailIntent.Load(planetId))
     }
 
-    SpaceTheme {
-        GradientBackground {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(Dimens.spacing16)
+    GradientBackground {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Dimens.spacing16)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = backText,
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(Dimens.spacing8))
-                    Text(
-                        text = state.detail?.name ?: "…",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.weight(1f)
+                IconButton(onClick = onBack) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = backText,
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
-                    IconButton(onClick = { vm.obtainIntent(PlanetDetailIntent.ToggleFavorite) }) {
-                        Icon(
-                            if (state.isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                            contentDescription = favoriteText,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
                 }
+                Spacer(modifier = Modifier.width(Dimens.spacing8))
+                Text(
+                    text = state.detail?.name ?: "…",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.weight(1f)
+                )
+            }
 
-                Spacer(modifier = Modifier.height(Dimens.spacing12))
+            Spacer(modifier = Modifier.height(Dimens.spacing12))
 
-                when {
-                    state.isLoading -> Loading()
-                    state.error != null -> Text(
-                        text = state.error!!,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    state.detail != null -> {
-                        val planet = state.detail!!
-                        Card(
-                            modifier = Modifier.fillMaxWidth(),
-                            shape = MaterialTheme.shapes.medium,
-                            colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+            when {
+                state.isLoading -> Loading()
+                state.error != null -> Text(
+                    text = state.error!!,
+                    color = MaterialTheme.colorScheme.error
+                )
+                state.detail != null -> {
+                    val planet = state.detail!!
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+                        )
+                    ) {
+                        Column {
+                            AsyncImage(
+                                model = planet.imageUrl,
+                                contentDescription = planet.name,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(280.dp)
+                                    .clip(MaterialTheme.shapes.medium)
                             )
-                        ) {
-                            Column {
-                                AsyncImage(
-                                    model = planet.imageUrl,
-                                    contentDescription = planet.name,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(280.dp)
-                                        .clip(MaterialTheme.shapes.medium)
+                            Column(
+                                modifier = Modifier.padding(Dimens.spacing16),
+                                verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
+                            ) {
+                                Text(
+                                    text = planet.englishName,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                                Column(
-                                    modifier = Modifier.padding(Dimens.spacing16),
-                                    verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
-                                ) {
-                                    Text(
-                                        text = planet.englishName,
-                                        style = MaterialTheme.typography.labelLarge,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                    StatRow(gravity, planet.gravity?.let { "${it} м/с²" } ?: "—")
-                                    StatRow(radius, planet.meanRadiusKm?.let { "${it.toLong()} км" } ?: "—")
-                                    StatRow(mass, planet.massKg?.let { "${formatBig(it)} кг" } ?: "—")
-                                    StatRow(volume, planet.volumeKm3?.let { "${formatBig(it)} км³" } ?: "—")
-                                    StatRow(temperature, planet.avgTemperatureK?.let { "${it.toInt()} K" } ?: "—")
-                                    StatRow(perihelion, planet.perihelionKm?.let { "${formatBig(it)} км" } ?: "—")
-                                    StatRow(aphelion, planet.aphelionKm?.let { "${formatBig(it)} км" } ?: "—")
-                                    StatRow(moons, planet.moons.toString())
-                                    Spacer(modifier = Modifier.height(Dimens.spacing8))
-                                    Text(
-                                        text = interestingFact,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = planet.funFact,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
+                                StatRow(gravity, planet.gravity?.let { "${it} м/с²" } ?: "—")
+                                StatRow(radius, planet.meanRadiusKm?.let { "${it.toLong()} км" } ?: "—")
+                                StatRow(mass, planet.massKg?.let { "${formatBig(it)} кг" } ?: "—")
+                                StatRow(volume, planet.volumeKm3?.let { "${formatBig(it)} км³" } ?: "—")
+                                StatRow(temperature, planet.avgTemperatureK?.let { "${it.toInt()} K" } ?: "—")
+                                StatRow(perihelion, planet.perihelionKm?.let { "${formatBig(it)} км" } ?: "—")
+                                StatRow(aphelion, planet.aphelionKm?.let { "${formatBig(it)} км" } ?: "—")
+                                StatRow(moons, planet.moons.toString())
+                                Spacer(modifier = Modifier.height(Dimens.spacing8))
+                                Text(
+                                    text = interestingFact,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = planet.funFact,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         }
                     }

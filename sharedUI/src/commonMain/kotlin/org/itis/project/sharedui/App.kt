@@ -1,20 +1,21 @@
 package org.itis.project.sharedui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import org.itis.project.sharedlogic.feature.profile.impl.data.ThemeManager
 import org.itis.project.sharedui.theme.SpaceTheme
+import org.koin.compose.koinInject
 
 @Composable
 fun App() {
-    var isDarkTheme by remember { mutableStateOf(true) }
+    val themeManager: ThemeManager = koinInject()
+    val isDarkTheme by themeManager.isDarkTheme.collectAsState()
 
     SpaceTheme(darkTheme = isDarkTheme) {
         SpaceRoot(
             isDarkTheme = isDarkTheme,
-            onThemeChange = { isDarkTheme = it }
+            onThemeChange = { themeManager.setDarkTheme(it) }
         )
     }
 }

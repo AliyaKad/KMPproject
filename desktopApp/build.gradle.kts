@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.sharedLogic)
+    implementation(projects.sharedlogic)
     implementation(projects.sharedUI)
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.uiToolingPreview)

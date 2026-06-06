@@ -24,7 +24,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(project(":sharedLogic"))
+                implementation(project(":sharedlogic"))
 
                 implementation(compose.runtime)
                 implementation(compose.ui)

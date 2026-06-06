@@ -34,5 +34,5 @@ plugins {
 
 include(":androidApp")
 include(":desktopApp")
-include(":sharedLogic")
+include(":sharedlogic")
 include(":sharedUI")

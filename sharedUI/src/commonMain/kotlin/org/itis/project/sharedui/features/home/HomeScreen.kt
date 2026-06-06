@@ -20,7 +20,6 @@ import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.generated.resources.Res
 import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
-import org.itis.project.sharedui.theme.SpaceTheme
 import org.itis.project.sharedui.common.formatCoord
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -51,137 +50,135 @@ fun HomeScreen(
         }
     }
 
-    SpaceTheme {
-        GradientBackground {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(Dimens.spacing16),
-                verticalArrangement = Arrangement.spacedBy(Dimens.spacing16)
+    GradientBackground {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(Dimens.spacing16),
+            verticalArrangement = Arrangement.spacedBy(Dimens.spacing16)
+        ) {
+            Text(
+                text = state.greeting,
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            AppCard(
+                glassEffect = true,
+                modifier = Modifier.clickable { onNavigateToApodDetail() }
             ) {
-                Text(
-                    text = state.greeting,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-
-                AppCard(
-                    glassEffect = true,
-                    modifier = Modifier.clickable { onNavigateToApodDetail() }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
-                    ) {
-                        Text(
-                            text = apodTitle,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        if (state.apodLoading) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                        } else if (state.apod != null) {
-                            AsyncImage(
-                                model = state.apod!!.url,
-                                contentDescription = state.apod!!.title,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp)
-                            )
-                            Text(
-                                text = state.apod!!.title,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = state.apod!!.explanation.take(150) + "...",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        } else if (state.apodError != null) {
-                            Text(
-                                text = state.apodError!!,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                    Text(
+                        text = apodTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    if (state.apodLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
-                    }
-                }
-
-                AppCard(
-                    glassEffect = true,
-                    modifier = Modifier.clickable { onNavigateToPlanetDetail("terre") }
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
-                    ) {
+                    } else if (state.apod != null) {
+                        AsyncImage(
+                            model = state.apod!!.url,
+                            contentDescription = state.apod!!.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                        )
                         Text(
-                            text = planetDayTitle,
-                            style = MaterialTheme.typography.titleLarge,
+                            text = state.apod!!.title,
+                            style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = state.planetName,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = state.planetFact,
+                            text = state.apod!!.explanation.take(150) + "...",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+                    } else if (state.apodError != null) {
+                        Text(
+                            text = state.apodError!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
+            }
 
-                AppCard(glassEffect = true) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
-                    ) {
+            AppCard(
+                glassEffect = true,
+                modifier = Modifier.clickable { onNavigateToPlanetDetail("terre") }
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
+                ) {
+                    Text(
+                        text = planetDayTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = state.planetName,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = state.planetFact,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            AppCard(glassEffect = true) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.spacing8)
+                ) {
+                    Text(
+                        text = issTitle,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    if (state.issLoading) {
+                        Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    } else if (state.issPosition != null) {
                         Text(
-                            text = issTitle,
-                            style = MaterialTheme.typography.titleLarge,
+                            text = "${stringResource(Res.string.home_latitude)}: ${formatCoord(state.issPosition!!.latitude)}°",
+                            style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        if (state.issLoading) {
-                            Text(loadingText, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        } else if (state.issPosition != null) {
-                            Text(
-                                text = "${stringResource(Res.string.home_latitude)}: ${formatCoord(state.issPosition!!.latitude)}°",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "${stringResource(Res.string.home_longitude)}: ${formatCoord(state.issPosition!!.longitude)}°",
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        } else if (state.issError != null) {
-                            Text(
-                                text = state.issError!!,
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                        Text(
+                            text = "${stringResource(Res.string.home_longitude)}: ${formatCoord(state.issPosition!!.longitude)}°",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    } else if (state.issError != null) {
+                        Text(
+                            text = state.issError!!,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
-
-                AppButton(
-                    onClick = { vm.obtainIntent(HomeEvent.Refresh) },
-                    text = refreshButton,
-                    variant = ButtonVariant.Primary,
-                    modifier = Modifier.fillMaxWidth()
-                )
             }
+
+            AppButton(
+                onClick = { vm.obtainIntent(HomeEvent.Refresh) },
+                text = refreshButton,
+                variant = ButtonVariant.Primary,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

@@ -13,11 +13,6 @@ import androidx.compose.ui.unit.dp
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.theme.LocalSpaceVisuals
 
-/**
- * Glass-карточка для экранов авторизации.
- * Не зависит от `MaterialTheme.colorScheme.background` (как старый `AppCard`),
- * а корректно подхватывает [LocalSpaceVisuals.isDark].
- */
 @Composable
 fun AuthGlassCard(
     modifier: Modifier = Modifier,

@@ -82,10 +82,7 @@ fun ProfileScreen(
             ProfileContent(
                 user = state.user,
                 isDarkTheme = isDarkTheme,
-                onThemeChange = { value ->
-                    onThemeChange(value)
-                    onEvent(ProfileEvent.UpdateTheme(value))
-                },
+                onThemeChange = onThemeChange,
                 onLogoutClick = onLogoutClick,
                 profileTitle = profileTitle,
                 themeLabel = themeLabel,
@@ -227,4 +224,3 @@ private fun getUserAvatarColor(user: User?): Color {
     return colors[index]
 }
 
-private fun Modifier.width(size: Int): Modifier = this.then(Modifier.size(size.dp))

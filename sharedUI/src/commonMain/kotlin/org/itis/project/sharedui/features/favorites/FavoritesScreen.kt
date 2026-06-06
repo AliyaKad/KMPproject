@@ -7,14 +7,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import org.itis.project.sharedlogic.feature.favorites.impl.presentation.FavoritesEvent
 import org.itis.project.sharedlogic.feature.favorites.impl.presentation.FavoritesViewModel
 import org.itis.project.sharedui.components.GradientBackground
 import org.itis.project.sharedui.generated.resources.Res
 import org.itis.project.sharedui.generated.resources.*
 import org.itis.project.sharedui.theme.Dimens
-import org.itis.project.sharedui.theme.SpaceTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -36,89 +34,87 @@ fun FavoritesScreen(
         vm.handleEvent(FavoritesEvent.LoadFavorites)
     }
 
-    SpaceTheme {
-        GradientBackground {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(Dimens.spacing16)
-            ) {
-                Text(
-                    text = favoritesTitle,
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+    GradientBackground {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(Dimens.spacing16)
+        ) {
+            Text(
+                text = favoritesTitle,
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
 
-                Spacer(modifier = Modifier.height(Dimens.spacing16))
+            Spacer(modifier = Modifier.height(Dimens.spacing16))
 
-                when {
-                    state.isLoading -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
+            when {
+                state.isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                state.error != null -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = state.error!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(Dimens.spacing16))
+                        Button(
+                            onClick = {
+                                vm.handleEvent(FavoritesEvent.ClearError)
+                                vm.handleEvent(FavoritesEvent.LoadFavorites)
+                            }
                         ) {
-                            CircularProgressIndicator()
+                            Text(retryButton)
                         }
                     }
+                }
 
-                    state.error != null -> {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
+                state.favorites.isEmpty() -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = state.error!!,
-                                color = MaterialTheme.colorScheme.error
+                                text = emptyTitle,
+                                style = MaterialTheme.typography.headlineSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                            Spacer(modifier = Modifier.height(Dimens.spacing16))
-                            Button(
+                            Spacer(modifier = Modifier.height(Dimens.spacing8))
+                            Text(
+                                text = emptyDescription,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+
+                else -> {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
+                    ) {
+                        items(state.favorites, key = { it.date }) { favorite ->
+                            FavoriteListItem(
+                                favorite = favorite,
+                                onRemove = {
+                                    vm.handleEvent(FavoritesEvent.RemoveFavorite(favorite.date))
+                                },
                                 onClick = {
-                                    vm.handleEvent(FavoritesEvent.ClearError)
-                                    vm.handleEvent(FavoritesEvent.LoadFavorites)
+                                    onApodClick(favorite.date)
                                 }
-                            ) {
-                                Text(retryButton)
-                            }
-                        }
-                    }
-
-                    state.favorites.isEmpty() -> {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = emptyTitle,
-                                    style = MaterialTheme.typography.headlineSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(modifier = Modifier.height(Dimens.spacing8))
-                                Text(
-                                    text = emptyDescription,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-
-                    else -> {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(Dimens.spacing12)
-                        ) {
-                            items(state.favorites, key = { it.date }) { favorite ->
-                                FavoriteListItem(
-                                    favorite = favorite,
-                                    onRemove = {
-                                        vm.handleEvent(FavoritesEvent.RemoveFavorite(favorite.date))
-                                    },
-                                    onClick = {
-                                        onApodClick(favorite.date)
-                                    }
-                                )
-                            }
+                            )
                         }
                     }
                 }

@@ -23,8 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
-import org.itis.project.sharedui.features.apod.ApodDetailScreen
-import org.itis.project.sharedui.features.apod.ApodSearchScreen
 import org.itis.project.sharedui.nav.*
 
 @Composable
@@ -60,7 +58,7 @@ fun iconFor(route: NavKey): ImageVector = when (route) {
     HomeRoute -> Icons.Outlined.Home
     ApodSearchRoute -> Icons.Outlined.Star
     PlanetsRoute -> Icons.Outlined.Rocket
-    ApodDetailRoute -> Icons.Outlined.Public
+    is ApodDetailRoute -> Icons.Outlined.Public
     FavoritesRoute -> Icons.Outlined.Favorite
     ProfileRoute -> Icons.Outlined.Person
     is PlanetDetailRoute -> Icons.Outlined.Rocket

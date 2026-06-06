@@ -1,11 +1,23 @@
 package org.itis.project.sharedui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavKey
@@ -13,13 +25,18 @@ import coil3.ImageLoader
 import coil3.compose.setSingletonImageLoaderFactory
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthEvent
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthState
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthViewModel
 import org.itis.project.sharedui.components.StarryBackdrop
+import org.itis.project.sharedui.features.auth.LoginScreen
+import org.itis.project.sharedui.features.auth.RegisterScreen
 import org.itis.project.sharedui.nav.HomeRoute
 import org.itis.project.sharedui.nav.components.NavHost
 import org.itis.project.sharedui.nav.components.rememberNavController
 import org.itis.project.sharedui.nav.ui.BottomBar
 import org.itis.project.sharedui.nav.ui.NavRail
-import org.itis.project.sharedui.theme.SpaceTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SpaceRoot(
@@ -33,6 +50,66 @@ fun SpaceRoot(
             .build()
     }
 
+    val authViewModel: AuthViewModel = koinViewModel()
+    val authState by authViewModel.state.collectAsState()
+    var showRegister by remember { mutableStateOf(false) }
+
+    StarryBackdrop {
+        AnimatedContent(
+            targetState = authStateBucket(authState, showRegister),
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "auth-gate"
+        ) { bucket ->
+            when (bucket) {
+                AuthBucket.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                }
+
+                AuthBucket.Login -> {
+                    LoginScreen(
+                        errorMessage = (authState as? AuthState.Error)?.message,
+                        onLoginClick = { email, password ->
+                            authViewModel.handleEvent(AuthEvent.OnLogin(email, password))
+                        },
+                        onRegisterClick = { showRegister = true }
+                    )
+                }
+
+                AuthBucket.Register -> {
+                    RegisterScreen(
+                        errorMessage = (authState as? AuthState.Error)?.message,
+                        onRegisterClick = { email, username, password ->
+                            authViewModel.handleEvent(
+                                AuthEvent.OnRegister(email, username, password)
+                            )
+                        },
+                        onBackToLogin = { showRegister = false }
+                    )
+                }
+
+                AuthBucket.Authorized -> {
+                    AuthorizedShell(
+                        isDarkTheme = isDarkTheme,
+                        onThemeChange = onThemeChange,
+                        onLogout = { authViewModel.handleEvent(AuthEvent.OnLogout) }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AuthorizedShell(
+    isDarkTheme: Boolean,
+    onThemeChange: (Boolean) -> Unit,
+    onLogout: () -> Unit
+) {
     val navController = rememberNavController(startDestination = HomeRoute)
 
     fun onTopLevelRouteSelected(route: NavKey) {
@@ -41,86 +118,46 @@ fun SpaceRoot(
         navController += route
     }
 
-    SpaceTheme(darkTheme = isDarkTheme) {
-        StarryBackdrop {
-            BoxWithConstraints(Modifier.fillMaxSize()) {
-                val isWide = maxWidth >= 720.dp
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        val isWide = maxWidth >= 720.dp
 
-                if (isWide) {
-                    Row(Modifier.fillMaxSize()) {
-                        NavRail(
-                            current = navController.last(),
-                            onSelect = ::onTopLevelRouteSelected
-                        )
-                        NavHost(navController = navController)
-                    }
-                } else {
-                    Column(Modifier.fillMaxSize()) {
-                        Box(Modifier.fillMaxSize().weight(1f)) {
-                            NavHost(navController = navController)
-                        }
-                        BottomBar(
-                            current = navController.last(),
-                            onSelect = ::onTopLevelRouteSelected
-                        )
-                    }
+        if (isWide) {
+            Row(Modifier.fillMaxSize()) {
+                NavRail(
+                    current = navController.last(),
+                    onSelect = ::onTopLevelRouteSelected
+                )
+                NavHost(
+                    navController = navController,
+                    isDarkTheme = isDarkTheme,
+                    onThemeChange = onThemeChange,
+                    onLogout = onLogout
+                )
+            }
+        } else {
+            Column(Modifier.fillMaxSize()) {
+                Box(Modifier.fillMaxSize().weight(1f)) {
+                    NavHost(
+                        navController = navController,
+                        isDarkTheme = isDarkTheme,
+                        onThemeChange = onThemeChange,
+                        onLogout = onLogout
+                    )
                 }
+                BottomBar(
+                    current = navController.last(),
+                    onSelect = ::onTopLevelRouteSelected
+                )
             }
         }
     }
+}
 
+private enum class AuthBucket { Loading, Login, Register, Authorized }
 
-
-
-//    val authViewModel: AuthViewModel = koinViewModel()
-//    val profileViewModel: ProfileViewModel = koinViewModel()
-//
-//    val authState by authViewModel.state.collectAsState()
-//    val profileState by profileViewModel.state.collectAsState()
-//
-//    val showRegister = remember { mutableStateOf(false) }
-//
-//    when (authState) {
-//        is AuthState.Loading -> {
-//            Box(
-//                modifier = Modifier.fillMaxSize(),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-//            }
-//        }
-//
-//        is AuthState.Unauthorized,
-//        is AuthState.Error -> {
-//            if (showRegister.value) {
-//                RegisterScreen(
-//                    onRegisterClick = { email, username, password ->
-//                        authViewModel.handleEvent(
-//                            AuthEvent.OnRegister(email, username, password)
-//                        )
-//                    },
-//                    onBackToLogin = { showRegister.value = false }
-//                )
-//            } else {
-//                LoginScreen(
-//                    onLoginClick = { email, password ->
-//                        authViewModel.handleEvent(
-//                            AuthEvent.OnLogin(email, password)
-//                        )
-//                    },
-//                    onRegisterClick = { showRegister.value = true }
-//                )
-//            }
-//        }
-//
-//        is AuthState.Authorized -> {
-//            ProfileScreen(
-//                state = profileState,
-//                isDarkTheme = isDarkTheme,
-//                onThemeChange = onThemeChange,
-//                onLogoutClick = { authViewModel.handleEvent(AuthEvent.OnLogout) },
-//                onEvent = profileViewModel::handleEvent
-//            )
-//        }
-//    }
+private fun authStateBucket(state: AuthState, showRegister: Boolean): AuthBucket = when (state) {
+    AuthState.Loading -> AuthBucket.Loading
+    is AuthState.Authorized -> AuthBucket.Authorized
+    AuthState.Unauthorized, is AuthState.Error ->
+        if (showRegister) AuthBucket.Register else AuthBucket.Login
 }

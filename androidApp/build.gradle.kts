@@ -52,7 +52,7 @@ kotlin {
 dependencies {
 
     implementation(projects.sharedUI)
-    implementation(projects.sharedLogic)
+    implementation(projects.sharedlogic)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core)

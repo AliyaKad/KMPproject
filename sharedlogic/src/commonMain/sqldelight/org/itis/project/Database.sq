@@ -1,0 +1,90 @@
+CREATE TABLE IF NOT EXISTS favorite_apod (
+    date TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    explanation TEXT NOT NULL,
+    url TEXT NOT NULL,
+    hdurl TEXT,
+    media_type TEXT NOT NULL,
+    copyright TEXT,
+    added_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL,
+    password_hash TEXT NOT NULL,
+    avatar_color TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    user_id INTEGER NOT NULL PRIMARY KEY,
+    is_logged_in INTEGER NOT NULL,
+    last_login TEXT NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
+-- INSERT OR REPLACE INTO favorite_apod (
+--     date, title, explanation, url, hdurl, media_type, copyright, added_at
+-- ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+DELETE FROM favorite_apod WHERE date = ?;
+
+SELECT * FROM favorite_apod ORDER BY added_at DESC;
+
+SELECT * FROM favorite_apod WHERE date = ?;
+
+SELECT COUNT(*) FROM favorite_apod;
+
+
+selectUserByEmail:
+SELECT *
+FROM users
+WHERE email = ?;
+
+selectUserById:
+SELECT *
+FROM users
+WHERE id = ?;
+
+insertUser:
+INSERT INTO users(email, username, password_hash, avatar_color)
+VALUES (?, ?, ?, ?);
+
+insertOrReplaceSession:
+INSERT OR REPLACE INTO sessions(user_id, is_logged_in, last_login)
+VALUES (?, 1, ?);
+
+selectSession:
+SELECT *
+FROM sessions
+WHERE user_id = ?;
+
+deleteSession:
+DELETE
+FROM sessions
+WHERE user_id = ?;
+
+clearAllSessions:
+DELETE
+FROM sessions;
+
+insertFavoriteApod:
+INSERT OR REPLACE INTO favorite_apod (
+    date, title, explanation, url, hdurl, media_type, copyright, added_at
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteFavoriteApod:
+DELETE FROM favorite_apod WHERE date = ?;
+
+selectAllFavorites:
+SELECT * FROM favorite_apod ORDER BY added_at DESC;
+
+selectFavoriteByDate:
+SELECT * FROM favorite_apod WHERE date = ?;
+
+countFavorites:
+SELECT COUNT(*) FROM favorite_apod;
+
+
+

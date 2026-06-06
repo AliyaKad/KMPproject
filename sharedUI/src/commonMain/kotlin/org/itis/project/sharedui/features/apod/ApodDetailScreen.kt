@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -116,13 +115,6 @@ fun ApodDetailScreen(
                                             if (state.isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                                             contentDescription = "В избранное",
                                             tint = if (state.isFavorite) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                    IconButton(onClick = { vm.obtainIntent(ApodDetailEvent.Share) }) {
-                                        Icon(
-                                            Icons.Filled.Share,
-                                            contentDescription = "Поделиться",
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                 }
