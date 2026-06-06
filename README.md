@@ -18,3 +18,5 @@ Android + Desktop
 docker build -t apod-api https://github.com/nasa/apod-api.git
 docker run -d -p 5000:5000 --name apod-api-container apod-api
 ```
+
+Ссылка на скринкаст: https://drive.google.com/file/d/11UclSFbuTYf4X33A86JwxwLgOzXSU3PG/view?usp=sharing
