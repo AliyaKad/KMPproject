@@ -1,9 +1,12 @@
 package org.itis.project.sharedui.features.auth
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,14 +24,18 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Stars
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -36,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.itis.project.sharedui.components.AuthGlassCard
 import org.itis.project.sharedui.generated.resources.Res
@@ -69,12 +78,45 @@ import org.itis.project.sharedui.generated.resources.register_title
 import org.itis.project.sharedui.generated.resources.register_username_label
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.utils.isValidEmail
-import org.itis.project.sharedui.utils.isValidPassword
 import org.itis.project.sharedui.utils.isValidUsername
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthEvent
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthUiState
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun RegisterScreen(
+    viewModel: AuthViewModel,
+    onRegisterSuccess: () -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val authState by viewModel.state.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthState.Authorized) {
+            onRegisterSuccess()
+        }
+    }
+
+    LaunchedEffect(uiState) {
+        if (uiState is AuthUiState.Success) {
+            viewModel.handleEvent(AuthEvent.ClearError)
+        }
+    }
+
+    RegisterScreenContent(
+        onRegisterClick = { email, username, password ->
+            viewModel.handleEvent(AuthEvent.OnRegister(email, username, password))
+        },
+        onBackToLogin = onNavigateToLogin,
+        errorMessage = (uiState as? AuthUiState.Error)?.message,
+        isSubmitting = uiState is AuthUiState.Loading
+    )
+}
+
+@Composable
+private fun RegisterScreenContent(
     onRegisterClick: (String, String, String) -> Unit,
     onBackToLogin: () -> Unit,
     errorMessage: String? = null,
@@ -85,11 +127,18 @@ fun RegisterScreen(
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmPasswordVisible by remember { mutableStateOf(false) }
+
     var emailError by remember { mutableStateOf<String?>(null) }
     var usernameError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var confirmPasswordError by remember { mutableStateOf<String?>(null) }
     var submitAttempted by remember { mutableStateOf(false) }
+
+    val hasMinLength = password.length >= 6
+    val hasDigit = password.any { it.isDigit() }
+    val hasLetter = password.any { it.isLetter() }
 
     val errEmailEmpty = stringResource(Res.string.error_email_empty)
     val errEmailInvalid = stringResource(Res.string.error_email_invalid)
@@ -120,10 +169,8 @@ fun RegisterScreen(
         passwordError = when {
             password.isBlank() -> errPasswordEmpty
             password.length < 6 -> errPasswordMin
-            !isValidPassword(password) -> when {
-                !password.any { it.isDigit() } -> errPasswordNoDigit
-                else -> errPasswordNoLetter
-            }
+            !hasDigit -> errPasswordNoDigit
+            !hasLetter -> errPasswordNoLetter
             else -> null
         }
         confirmPasswordError = when {
@@ -134,7 +181,9 @@ fun RegisterScreen(
     }
 
     val isFormValid = emailError == null && usernameError == null &&
-            passwordError == null && confirmPasswordError == null && !isSubmitting
+            passwordError == null && confirmPasswordError == null &&
+            email.isNotBlank() && username.isNotBlank() &&
+            password.isNotBlank() && !isSubmitting
 
     Box(
         modifier = Modifier
@@ -197,10 +246,11 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && emailError != null,
                         supportingText = {
-                            if (submitAttempted) emailError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && emailError != null) {
+                                Text(emailError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
 
                     OutlinedTextField(
@@ -211,10 +261,11 @@ fun RegisterScreen(
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && usernameError != null,
                         supportingText = {
-                            if (submitAttempted) usernameError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && usernameError != null) {
+                                Text(usernameError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
 
                     OutlinedTextField(
@@ -222,37 +273,76 @@ fun RegisterScreen(
                         onValueChange = { password = it },
                         label = { Text(stringResource(Res.string.login_password_label)) },
                         leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-                        visualTransformation = PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && passwordError != null,
                         supportingText = {
-                            if (submitAttempted) passwordError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && passwordError != null) {
+                                Text(passwordError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
+
+                    AnimatedVisibility(password.isNotBlank()) {
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            PasswordRequirement(
+                                met = hasMinLength,
+                                text = "Минимум 6 символов"
+                            )
+                            PasswordRequirement(
+                                met = hasDigit,
+                                text = "Хотя бы одна цифра"
+                            )
+                            PasswordRequirement(
+                                met = hasLetter,
+                                text = "Хотя бы одна буква"
+                            )
+                        }
+                    }
 
                     OutlinedTextField(
                         value = confirmPassword,
                         onValueChange = { confirmPassword = it },
                         label = { Text(stringResource(Res.string.register_confirm_password_label)) },
                         leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-                        visualTransformation = PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                                Icon(
+                                    if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = null
+                                )
+                            }
+                        },
+                        visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && confirmPasswordError != null,
                         supportingText = {
-                            if (submitAttempted) confirmPasswordError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && confirmPasswordError != null) {
+                                Text(confirmPasswordError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
 
-                    AnimatedVisibility(errorMessage != null) {
+                    AnimatedVisibility(
+                        visible = errorMessage != null,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
                         if (errorMessage != null) {
                             Surface(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f),
+                                color = MaterialTheme.colorScheme.errorContainer,
                                 shape = MaterialTheme.shapes.medium,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
@@ -276,11 +366,7 @@ fun RegisterScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(Dimens.buttonHeight),
-                        enabled = isFormValid,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                        enabled = isFormValid
                     ) {
                         if (isSubmitting) {
                             CircularProgressIndicator(
@@ -289,7 +375,7 @@ fun RegisterScreen(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         } else {
-                            Text(stringResource(Res.string.register_button), style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(Res.string.register_button))
                         }
                     }
 
@@ -302,5 +388,26 @@ fun RegisterScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun PasswordRequirement(met: Boolean, text: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Icon(
+            imageVector = if (met) Icons.Filled.CheckCircle else Icons.Filled.Close,
+            contentDescription = null,
+            tint = if (met) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error.copy(alpha = 0.6f),
+            modifier = Modifier.size(16.dp)
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = if (met) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+        )
     }
 }

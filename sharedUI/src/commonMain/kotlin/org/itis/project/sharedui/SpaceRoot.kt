@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,7 @@ import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthEvent
 import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthState
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthUiState
 import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthViewModel
 import org.itis.project.sharedui.components.StarryBackdrop
 import org.itis.project.sharedui.features.auth.LoginScreen
@@ -52,6 +54,7 @@ fun SpaceRoot(
 
     val authViewModel: AuthViewModel = koinViewModel()
     val authState by authViewModel.state.collectAsState()
+
     var showRegister by remember { mutableStateOf(false) }
 
     StarryBackdrop {
@@ -72,23 +75,23 @@ fun SpaceRoot(
 
                 AuthBucket.Login -> {
                     LoginScreen(
-                        errorMessage = (authState as? AuthState.Error)?.message,
-                        onLoginClick = { email, password ->
-                            authViewModel.handleEvent(AuthEvent.OnLogin(email, password))
-                        },
-                        onRegisterClick = { showRegister = true }
+                        viewModel = authViewModel,
+                        onLoginSuccess = {  },
+                        onNavigateToRegister = {
+                            showRegister = true
+                            authViewModel.onRegisterScreenOpen()
+                        }
                     )
                 }
 
                 AuthBucket.Register -> {
                     RegisterScreen(
-                        errorMessage = (authState as? AuthState.Error)?.message,
-                        onRegisterClick = { email, username, password ->
-                            authViewModel.handleEvent(
-                                AuthEvent.OnRegister(email, username, password)
-                            )
-                        },
-                        onBackToLogin = { showRegister = false }
+                        viewModel = authViewModel,
+                        onRegisterSuccess = {  },
+                        onNavigateToLogin = {
+                            showRegister = false
+                            authViewModel.onLoginScreenOpen()
+                        }
                     )
                 }
 
@@ -96,7 +99,10 @@ fun SpaceRoot(
                     AuthorizedShell(
                         isDarkTheme = isDarkTheme,
                         onThemeChange = onThemeChange,
-                        onLogout = { authViewModel.handleEvent(AuthEvent.OnLogout) }
+                        onLogout = {
+                            authViewModel.handleEvent(AuthEvent.OnLogout)
+                            showRegister = false
+                        }
                     )
                 }
             }

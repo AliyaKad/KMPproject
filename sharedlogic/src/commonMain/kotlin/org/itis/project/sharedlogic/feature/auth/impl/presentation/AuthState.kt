@@ -14,5 +14,6 @@ sealed class AuthEvent {
     data class OnRegister(val email: String, val username: String, val password: String) : AuthEvent()
     data object OnLogout : AuthEvent()
     data object CheckAuth : AuthEvent()
+    data object ClearError : AuthEvent()
 }
 

@@ -1,6 +1,8 @@
 package org.itis.project.sharedui.features.auth
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,21 +23,23 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.RocketLaunch
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +49,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import org.itis.project.sharedui.components.AuthGlassCard
 import org.itis.project.sharedui.generated.resources.Res
@@ -59,10 +64,44 @@ import org.itis.project.sharedui.generated.resources.login_register_button
 import org.itis.project.sharedui.generated.resources.login_title
 import org.itis.project.sharedui.theme.Dimens
 import org.itis.project.sharedui.utils.isValidEmail
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthEvent
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthUiState
+import org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun LoginScreen(
+    viewModel: AuthViewModel,
+    onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val authState by viewModel.state.collectAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is org.itis.project.sharedlogic.feature.auth.impl.presentation.AuthState.Authorized) {
+            onLoginSuccess()
+        }
+    }
+
+    LaunchedEffect(uiState) {
+        if (uiState is AuthUiState.Success) {
+            viewModel.handleEvent(AuthEvent.ClearError)
+        }
+    }
+
+    LoginScreenContent(
+        onLoginClick = { email, password ->
+            viewModel.handleEvent(AuthEvent.OnLogin(email, password))
+        },
+        onRegisterClick = onNavigateToRegister,
+        errorMessage = (uiState as? AuthUiState.Error)?.message,
+        isSubmitting = uiState is AuthUiState.Loading
+    )
+}
+
+@Composable
+private fun LoginScreenContent(
     onLoginClick: (String, String) -> Unit,
     onRegisterClick: () -> Unit,
     errorMessage: String? = null,
@@ -70,6 +109,7 @@ fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var submitAttempted by remember { mutableStateOf(false) }
@@ -92,7 +132,8 @@ fun LoginScreen(
         }
     }
 
-    val isLoginEnabled = emailError == null && passwordError == null && !isSubmitting
+    val isLoginEnabled = emailError == null && passwordError == null &&
+            email.isNotBlank() && password.isNotBlank() && !isSubmitting
 
     Box(
         modifier = Modifier
@@ -155,10 +196,11 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && emailError != null,
                         supportingText = {
-                            if (submitAttempted) emailError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && emailError != null) {
+                                Text(emailError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
 
                     OutlinedTextField(
@@ -166,21 +208,34 @@ fun LoginScreen(
                         onValueChange = { password = it },
                         label = { Text(stringResource(Res.string.login_password_label)) },
                         leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
-                        visualTransformation = PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                Icon(
+                                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = if (passwordVisible) "Скрыть пароль" else "Показать пароль"
+                                )
+                            }
+                        },
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         modifier = Modifier.fillMaxWidth(),
                         isError = submitAttempted && passwordError != null,
                         supportingText = {
-                            if (submitAttempted) passwordError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                            if (submitAttempted && passwordError != null) {
+                                Text(passwordError!!, color = MaterialTheme.colorScheme.error)
+                            }
                         },
-                        singleLine = true,
-                        colors = transparentFieldColors()
+                        singleLine = true
                     )
 
-                    AnimatedVisibility(errorMessage != null) {
+                    AnimatedVisibility(
+                        visible = errorMessage != null,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
                         if (errorMessage != null) {
                             Surface(
-                                color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.85f),
+                                color = MaterialTheme.colorScheme.errorContainer,
                                 shape = MaterialTheme.shapes.medium,
                                 modifier = Modifier.fillMaxWidth()
                             ) {
@@ -204,11 +259,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(Dimens.buttonHeight),
-                        enabled = isLoginEnabled,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                        enabled = isLoginEnabled
                     ) {
                         if (isSubmitting) {
                             CircularProgressIndicator(
@@ -217,7 +268,7 @@ fun LoginScreen(
                                 color = MaterialTheme.colorScheme.onPrimary
                             )
                         } else {
-                            Text(stringResource(Res.string.login_button), style = MaterialTheme.typography.titleMedium)
+                            Text(stringResource(Res.string.login_button))
                         }
                     }
 
@@ -232,17 +283,3 @@ fun LoginScreen(
         }
     }
 }
-
-@Composable
-internal fun transparentFieldColors() = TextFieldDefaults.colors(
-    focusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f),
-    unfocusedContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.35f),
-    disabledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.2f),
-    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-    unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
-    focusedLabelColor = MaterialTheme.colorScheme.primary,
-    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-    cursorColor = MaterialTheme.colorScheme.primary,
-    focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
-    unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-)
