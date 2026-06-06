@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS sessions (
 --     date, title, explanation, url, hdurl, media_type, copyright, added_at
 -- ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
 
-DELETE FROM favorite_apod WHERE date = ?;
-
-SELECT * FROM favorite_apod ORDER BY added_at DESC;
-
-SELECT * FROM favorite_apod WHERE date = ?;
-
-SELECT COUNT(*) FROM favorite_apod;
+-- DELETE FROM favorite_apod WHERE date = ?;
+--
+-- SELECT * FROM favorite_apod ORDER BY added_at DESC;
+--
+-- SELECT * FROM favorite_apod WHERE date = ?;
+--
+-- SELECT COUNT(*) FROM favorite_apod;
 
 
 selectUserByEmail:
